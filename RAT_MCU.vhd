@@ -142,7 +142,7 @@ signal ALU_OPY : std_logic_vector(7 downto 0);
 
 signal C : std_logic;
 signal Z : std_logic;
-signal C_IN : std_logic;
+--signal C_IN : std_logic;
 
 signal RESULT : std_logic_vector(7 downto 0);
 
@@ -185,15 +185,16 @@ signal FLG_C_LD : std_logic;
 signal FLG_Z_LD : std_logic;
 signal FLG_LD_SEL : std_logic;
 signal FLG_SHAD_LD : std_logic;
-signal C_FLAG : std_logic;
+--signal C_FLAG : std_logic;
 signal Z_FLAG : std_logic;
+signal c_to_cin : std_logic;
 
 begin
 
 
 control: control_unit port map(
-            c_flag => c_flag,
-            z_flag => z_flag,
+            c_flag => c_to_cin,
+            z_flag => Z_flag,
             int => pre_int,
             reset => reset,
             ophigh => ir(17 downto 13),
@@ -254,7 +255,7 @@ al_you:   ALU port map(
             SEL => ALU_SEL,
             C_FLAG => C,
             Z_FLAG => Z,
-            C_IN => C_IN);
+            C_IN => c_to_cin);
             
 scratch:   scratch_ram port map(
             DATA_IN => DATA_IN,
@@ -272,8 +273,8 @@ flg:       FLAGS port map(
             zld => FLG_Z_LD,
             flgsel => FLG_LD_SEL,
             shadld => FLG_SHAD_LD,
-            cflag => C_FLAG,
-            zflag => Z_FLAG,
+            cflag => c_to_cin,
+            zflag => Z_flag,
             clk => CLK);
             
 i_reg: reg port map(
@@ -328,7 +329,7 @@ begin
     end if;
 end process;
 
-C_IN <= '0';
+--C_IN <= '1';
 SP_OUT <= (others => '0');
 pre_int <= i_out and INT;
 PORT_ID <= ir(7 downto 0);

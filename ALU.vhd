@@ -43,7 +43,7 @@ case SEL is
     when "0111" => rex := aex xor bex; --exor
     when "1000" => rex := aex and bex; --test
     when "1001" => rex := aex(7 downto 0) & C_IN; --lsl
-    when "1010" => rex := C_IN & aex(7 downto 1) & aex(0); --lsr
+    when "1010" => rex := aex(0) & C_IN & aex(7 downto 1); --lsr
     when "1011" => rex := '0' & aex(6 downto 0) & aex(7); --rol
     when "1100" => rex := '0' & aex(0) & aex(7 downto 1); -- ror
     when "1101" => rex := '0' & aex(7) & aex(7 downto 1); --asr
@@ -55,11 +55,19 @@ if (rex(7 downto 0) = x"00") then
 else
     z <= '0';
 end if;
-C <= rex(8);
-SUM <= rex(7 downto 0);
+
+if SEL = "0100" and (aex < bex) then
+        C <= '1';
+        SUM <= aex(7 downto 0);
+     else
+        C <= rex(8); 
+        SUM <= rex(7 downto 0);
+end if;
 end process choose;
 
 
+C_FLAG <= C;
+Z_FLAG <= Z;
     
 
 --zflag: process(SEL, rex)
@@ -98,7 +106,6 @@ end process choose;
 --end process misc;
 
 --SUM <= S(7 downto 0);
-C_FLAG <= C;
-Z_FLAG <= Z;
+
 
 end Behavioral;
