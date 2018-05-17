@@ -132,6 +132,16 @@ component reg is
            clk : in STD_LOGIC);
 end component;
 
+component SP is
+    Port (RST: in STD_LOGIC;
+         CLK: in STD_LOGIC;
+            SP_LD: in STD_LOGIC;
+            SP_INCR: in STD_LOGIC;
+            SP_DECR: in STD_LOGIC;
+            DATA: in STD_LOGIC_VECTOR (7 downto 0);
+           DATA_OUT: out STD_LOGIC_VECTOR (7 downto 0));
+end component SP;
+
 signal PC_COUNT : std_logic_vector(9 downto 0);
 signal ir : std_logic_vector(17 downto 0);
 
@@ -185,7 +195,6 @@ signal FLG_C_LD : std_logic;
 signal FLG_Z_LD : std_logic;
 signal FLG_LD_SEL : std_logic;
 signal FLG_SHAD_LD : std_logic;
---signal C_FLAG : std_logic;
 signal Z_FLAG : std_logic;
 signal c_to_cin : std_logic;
 
@@ -257,6 +266,14 @@ al_you:   ALU port map(
             Z_FLAG => Z,
             C_IN => c_to_cin);
             
+stack_p:    SP port map(
+            SP_LD => SP_LD,
+            RST => RST,
+            sp_incr => sp_incr,
+            sp_decr => sp_decr,
+            CLK => CLK,
+            DATA => DX_OUT);
+            
 scratch:   scratch_ram port map(
             DATA_IN => DATA_IN,
             SCR_ADDR => SCR_ADDR,
@@ -307,7 +324,7 @@ begin
 end if;
 end process;
 
-scr_data: process(SCR_DATA_SEL, DX_OUT, PC_COUNT, DATA_IN)
+scr_data: process(SCR_DATA_SEL, DX_OUT, PC_COUNT, DATA_IN) --scr_data_sel mux
 begin
     if(SCR_DATA_SEL = '1') then
         DATA_IN <= PC_COUNT;
@@ -316,7 +333,7 @@ begin
     end if;
 end process;
 
-addr: process(SCR_ADDR_SEL, DY_OUT, ir, SP_OUT)
+addr: process(SCR_ADDR_SEL, DY_OUT, ir, SP_OUT) --scr_addr_sel mux
 begin
     if(SCR_ADDR_SEL = "00") then
         SCR_ADDR <= DY_OUT;
@@ -329,7 +346,6 @@ begin
     end if;
 end process;
 
---C_IN <= '1';
 SP_OUT <= (others => '0');
 pre_int <= i_out and INT;
 PORT_ID <= ir(7 downto 0);

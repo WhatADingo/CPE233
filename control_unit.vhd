@@ -259,9 +259,43 @@ when exec =>
         flg_c_clr <= '1';
     --SEC
     when "0110001" =>
-        flg_c_set <= '1';    
-       
-       
+        flg_c_set <= '1';
+    
+    
+    --Stack Pointer    
+    --call
+    when "0010001" =>
+        scr_data_sel <= '1';
+        scr_we <= '1';    
+        scr_addr_sel <= "11";
+        sp_ld <= '1';
+        sp_decr <= '1';
+        pc_ld <= '1';
+        pc_mux_sel <= "00";
+    --push
+    when "0100101" =>
+        scr_data_sel <= '0';
+        scr_we <= '1';
+        scr_addr_sel <= "11";
+        sp_ld <= '1';
+        sp_decr <= '1';
+    --pop
+    when "0100110" =>
+        rf_wr <= '1';
+        rf_wr_sel <= "01";
+        sp_incr <= '1';
+        sp_ld <= '1';
+        scr_addr_sel <= "10";
+    --RET
+    when "0110010" =>
+        pc_mux_sel <= "01";
+        scr_addr_sel <= "10";
+        sp_incr <= '1';
+        pc_ld <= '1';
+    --wsp
+    when "0101000" =>
+        sp_ld <= '1';
+        
         
     --reg-immed ---------
     --and
@@ -324,6 +358,7 @@ when exec =>
         alu_sel <= "0011";
         flg_c_ld <= '1';
         flg_z_ld <= '1';
+        
     --cmp
     when "1100000" | "1100001" | "1100010" | "1100011" =>
         alu_opy_sel <= '1';
