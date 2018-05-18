@@ -56,12 +56,16 @@ else
     z <= '0';
 end if;
 
-if SEL = "0100" and (aex < bex) then
+if SEL = "0100" then
+    SUM <= aex(7 downto 0);
+    if (aex < bex) then
         C <= '1';
-        SUM <= aex(7 downto 0);
-     else
-        C <= rex(8); 
-        SUM <= rex(7 downto 0);
+    else
+        C <= '0';
+    end if;
+else
+    C <= rex(8); 
+    SUM <= rex(7 downto 0);
 end if;
 end process choose;
 

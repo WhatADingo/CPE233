@@ -32,9 +32,9 @@ if (rising_edge(CLK)) then
     elsif (SP_LD = '1') then
         SP_Sig <= DATA;
     elsif (SP_INCR = '1') then
-        SP_Sig <= SP_Sig + 1;
+        SP_Sig <= SP_Sig + "00000001";
     elsif (SP_DECR = '1') then
-        SP_Sig <= SP_Sig - 1;
+        SP_Sig <= SP_Sig - "00000001";
     end if;
 end if;
 end process;
