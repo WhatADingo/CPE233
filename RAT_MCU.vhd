@@ -287,7 +287,7 @@ reg_mem:    reg_file port map(
 reg_mult:    reg_mux port map(
             rf_wr_sel => rf_wr_sel,
             ALU_res => RESULT,
-            scr_data => ir (7 downto 0),
+            scr_data => DATA_OUT(7 downto 0),
             sp_data => sp_out,
             in_port => IN_PORT,
             d_out => RF_WR_DATA);
@@ -321,7 +321,8 @@ scr_mux:   scr_addr_mux port map(
             scr_addr_sel => scr_addr_sel,
             reg_data => DY_OUT,
             instruction => ir (7 downto 0),
-            sp_data => sp_out);
+            sp_data => sp_out,
+            scr_addr => SCR_ADDR);
             
 scr_d_mux: scr_data_mux port map(
             scr_data_sel => scr_data_sel,

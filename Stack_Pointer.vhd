@@ -24,7 +24,7 @@ signal SP_Sig : std_logic_vector(7 downto 0) := "00000000";
 
 begin
 
-Main: process(RST,SP_LD,SP_INCR,SP_DECR,DATA)
+Main: process(CLK,RST,SP_LD,SP_INCR,SP_DECR,DATA)
 begin
 if (rising_edge(CLK)) then
     if (RST = '1') then

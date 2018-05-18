@@ -277,7 +277,7 @@ when exec =>
         scr_data_sel <= '0';
         scr_we <= '1';
         scr_addr_sel <= "11";
-        sp_ld <= '1';
+        sp_ld <= '0';
         sp_decr <= '1';
     --pop
     when "0100110" =>
