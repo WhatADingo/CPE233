@@ -109,6 +109,16 @@ component scratch_ram is
            DATA_OUT : out STD_LOGIC_VECTOR (9 downto 0));
 end component;
 
+component reg_mux is
+    Port ( rf_wr_sel: in std_logic_vector (1 downto 0);
+           ALU_res : in STD_LOGIC_VECTOR (7 downto 0);
+           scr_data: in std_logic_vector (7 downto 0);
+           sp_data: in std_logic_vector (7 downto 0);
+           in_port: in std_logic_vector (7 downto 0);
+           d_out: out std_logic_vector (7 downto 0)
+           );
+end component reg_mux;
+
 component FLAGS is
     Port ( c : in STD_LOGIC;
            z : in STD_LOGIC;
@@ -141,6 +151,23 @@ component SP is
             DATA: in STD_LOGIC_VECTOR (7 downto 0);
            DATA_OUT: out STD_LOGIC_VECTOR (7 downto 0));
 end component SP;
+
+component scr_addr_mux is
+    Port ( scr_addr_sel : in STD_LOGIC_VECTOR (1 downto 0);
+           reg_data : in std_logic_vector (7 downto 0);
+           instruction: in STD_LOGIC_VECTOR (7 downto 0);
+           sp_data: in std_logic_vector (7 downto 0);
+           scr_addr: out std_logic_vector (7 downto 0)
+           );
+end component scr_addr_mux;
+
+component scr_data_mux is
+  Port ( scr_data_sel: in std_logic;
+         reg_data: in std_logic_vector (7 downto 0);
+         pc_count: in std_logic_vector (9 downto 0);
+         scr_d_out: out std_logic_vector (9 downto 0)
+         );
+end component scr_data_mux;
 
 signal PC_COUNT : std_logic_vector(9 downto 0);
 signal ir : std_logic_vector(17 downto 0);
@@ -256,6 +283,14 @@ reg_mem:    reg_file port map(
             CLK => CLK,
             DX_OUT => DX_OUT,
             DY_OUT => DY_OUT);
+            
+reg_mult:    reg_mux port map(
+            rf_wr_sel => rf_wr_sel,
+            ALU_res => RESULT,
+            scr_data => ir (7 downto 0),
+            sp_data => sp_out,
+            in_port => IN_PORT,
+            d_out => RF_WR_DATA);
 
 al_you:   ALU port map(
             A=> DX_OUT,
@@ -272,7 +307,8 @@ stack_p:    SP port map(
             sp_incr => sp_incr,
             sp_decr => sp_decr,
             CLK => CLK,
-            DATA => DX_OUT);
+            DATA => DX_OUT,
+            DATA_OUT => sp_out );
             
 scratch:   scratch_ram port map(
             DATA_IN => DATA_IN,
@@ -280,6 +316,18 @@ scratch:   scratch_ram port map(
             SCR_WE => SCR_WE,
             CLK => CLK,
             DATA_OUT => DATA_OUT);
+
+scr_mux:   scr_addr_mux port map(
+            scr_addr_sel => scr_addr_sel,
+            reg_data => DY_OUT,
+            instruction => ir (7 downto 0),
+            sp_data => sp_out);
+            
+scr_d_mux: scr_data_mux port map(
+            scr_data_sel => scr_data_sel,
+            reg_data => DX_OUT,
+            pc_count  => PC_COUNT,
+            scr_d_out => DATA_IN);
             
 flg:       FLAGS port map(
             c => C,
@@ -311,40 +359,40 @@ begin
     end if;
 end process;
 
-reg_in: process(RF_WR_SEL, IN_PORT, DY_OUT, DATA_OUT, SP_OUT, RESULT)
-begin
-    if(RF_WR_SEL = "11") then
-        RF_WR_DATA <= IN_PORT;
-    elsif(RF_WR_SEL = "10") then
-        RF_WR_DATA <= SP_OUT;
-    elsif(RF_WR_SEL = "01") then
-        RF_WR_DATA <= DATA_OUT(7 downto 0);
-    else
-        RF_WR_DATA <= RESULT;
-end if;
-end process;
+--reg_in: process(RF_WR_SEL, IN_PORT, DY_OUT, DATA_OUT, SP_OUT, RESULT)
+--begin
+--    if(RF_WR_SEL = "11") then
+--        RF_WR_DATA <= IN_PORT;
+--    elsif(RF_WR_SEL = "10") then
+--        RF_WR_DATA <= SP_OUT;
+--    elsif(RF_WR_SEL = "01") then
+--        RF_WR_DATA <= DATA_OUT(7 downto 0);
+--    else
+--        RF_WR_DATA <= RESULT;
+--end if;
+--end process;
 
-scr_data: process(SCR_DATA_SEL, DX_OUT, PC_COUNT, DATA_IN) --scr_data_sel mux
-begin
-    if(SCR_DATA_SEL = '1') then
-        DATA_IN <= PC_COUNT;
-    else
-        DATA_IN <= "00" & DX_OUT;
-    end if;
-end process;
+--scr_data: process(SCR_DATA_SEL, DX_OUT, PC_COUNT, DATA_IN) --scr_data_sel mux
+--begin
+--    if(SCR_DATA_SEL = '1') then
+--        DATA_IN <= PC_COUNT;
+--    else
+--        DATA_IN <= "00" & DX_OUT;
+--    end if;
+--end process;
 
-addr: process(SCR_ADDR_SEL, DY_OUT, ir, SP_OUT) --scr_addr_sel mux
-begin
-    if(SCR_ADDR_SEL = "00") then
-        SCR_ADDR <= DY_OUT;
-    elsif(SCR_ADDR_SEL = "01") then
-        SCR_ADDR <= ir(7 downto 0);
-    elsif(SCR_ADDR_SEL = "10") then
-        SCR_ADDR <= SP_OUT; --sp data out
-    else
-        SCR_ADDR <= SP_OUT - 1; --sp data out -1
-    end if;
-end process;
+--addr: process(SCR_ADDR_SEL, DY_OUT, ir, SP_OUT) --scr_addr_sel mux
+--begin
+--    if(SCR_ADDR_SEL = "00") then
+--        SCR_ADDR <= DY_OUT;
+--    elsif(SCR_ADDR_SEL = "01") then
+--        SCR_ADDR <= ir(7 downto 0);
+--    elsif(SCR_ADDR_SEL = "10") then
+--        SCR_ADDR <= SP_OUT; --sp data out
+--    else
+--        SCR_ADDR <= SP_OUT - 1; --sp data out -1
+--    end if;
+--end process;
 
 --SP_OUT <= (others => '0');
 pre_int <= i_out and INT;
