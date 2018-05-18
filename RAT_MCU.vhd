@@ -346,7 +346,7 @@ begin
     end if;
 end process;
 
-SP_OUT <= (others => '0');
+--SP_OUT <= (others => '0');
 pre_int <= i_out and INT;
 PORT_ID <= ir(7 downto 0);
 OUT_PORT <= DX_OUT;

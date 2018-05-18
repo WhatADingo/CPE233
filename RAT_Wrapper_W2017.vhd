@@ -34,6 +34,7 @@ architecture Behavioral of RAT_wrapper is
    -- OUTPUT PORT IDS ------------------------------------------------------------
    -- In future labs you can add more port IDs
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
+   CONSTANT SSEG_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"81";
    -------------------------------------------------------------------------------
 
    -- Declare RAT_CPU ------------------------------------------------------------
@@ -59,6 +60,7 @@ architecture Behavioral of RAT_wrapper is
    -- Register definitions for output devices ------------------------------------
    -- add signals for any added outputs
    signal r_LEDS        : std_logic_vector (7 downto 0);
+   signal r_SSEG        : std_logic_vector (7 downto 0);
    -------------------------------------------------------------------------------
 
 begin
@@ -113,6 +115,9 @@ begin
             -- the register definition for the LEDS
             if (s_port_id = LEDS_ID) then
                r_LEDS <= s_output_port;
+            -- the register definition for the SSEG display    
+            elsif (s_port_id = SSEG_ID) then
+               r_SSEG <= s_output_port;
             end if;
            
          end if;
