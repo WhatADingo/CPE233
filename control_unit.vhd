@@ -184,6 +184,7 @@ when exec =>
     when "0001011" =>
         rf_wr <= '1';
         alu_sel <= "0011";
+        --scr_data_sel <= '0';
         flg_z_ld <= '1';
     --brn
     when "0010000" =>
@@ -268,7 +269,7 @@ when exec =>
         scr_data_sel <= '1';
         scr_we <= '1';    
         scr_addr_sel <= "11";
-        sp_ld <= '1';
+        sp_ld <= '0';
         sp_decr <= '1';
         pc_ld <= '1';
         pc_mux_sel <= "00";
@@ -284,7 +285,7 @@ when exec =>
         rf_wr <= '1';
         rf_wr_sel <= "01";
         sp_incr <= '1';
-        sp_ld <= '1';
+        sp_ld <= '0';
         scr_addr_sel <= "10";
     --RET
     when "0110010" =>
@@ -372,7 +373,8 @@ when exec =>
         scr_addr_sel <= "01";
     --st
     when "1110100" | "1110101" | "1110110" | "1110111" =>
-        scr_addr_sel <= "01";
+        --scr_add_sel <= "01";
+        scr_data_sel <= '0';
         scr_we <= '1';
         
          
