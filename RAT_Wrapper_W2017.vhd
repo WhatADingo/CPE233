@@ -18,7 +18,9 @@ entity RAT_wrapper is
     Port ( LEDS     : out   STD_LOGIC_VECTOR (7 downto 0);
            SWITCHES : in    STD_LOGIC_VECTOR (7 downto 0);
            RST      : in    STD_LOGIC;
-           CLK      : in    STD_LOGIC);
+           CLK      : in    STD_LOGIC;
+           ANODES   : out   std_logic_vector (3 downto 0);
+           CATHODES : out   std_logic_vector (7 downto 0));
 end RAT_wrapper;
 
 architecture Behavioral of RAT_wrapper is
@@ -34,7 +36,7 @@ architecture Behavioral of RAT_wrapper is
    -- OUTPUT PORT IDS ------------------------------------------------------------
    -- In future labs you can add more port IDs
    CONSTANT LEDS_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"40";
---   CONSTANT SSEG_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"81";
+   CONSTANT SSEG_ID       : STD_LOGIC_VECTOR (7 downto 0) := X"81";
    -------------------------------------------------------------------------------
 
    -- Declare RAT_CPU ------------------------------------------------------------
@@ -49,14 +51,14 @@ architecture Behavioral of RAT_wrapper is
    end component RAT_MCU;
    -------------------------------------------------------------------------------
    
---   -- SSEG Display ---------------------------------------------------------------
---   component sseg_dec is
---       Port (     ALU_VAL : in std_logic_vector(7 downto 0); 
---                  CLK : in std_logic;
---                  DISP_EN : out std_logic_vector(3 downto 0);
---                  SEGMENTS : out std_logic_vector(7 downto 0));
---   end component sseg_dec;
-   -------------------------------------------------------------------------------
+   -- SSEG Display ---------------------------------------------------------------
+   component sseg_dec is
+       Port (     ALU_VAL : in std_logic_vector(7 downto 0); 
+                  CLK : in std_logic;
+                  DISP_EN : out std_logic_vector(3 downto 0);
+                  SEGMENTS : out std_logic_vector(7 downto 0));
+   end component sseg_dec;
+   -----------------------------------------------------------------------------
    
    -- Signals for connecting RAT_CPU to RAT_wrapper -------------------------------
    signal s_input_port  : std_logic_vector (7 downto 0);
@@ -69,7 +71,7 @@ architecture Behavioral of RAT_wrapper is
    -- Register definitions for output devices ------------------------------------
    -- add signals for any added outputs
    signal r_LEDS        : std_logic_vector (7 downto 0);
---   signal r_SSEG        : std_logic_vector (7 downto 0);
+   signal r_SSEG        : std_logic_vector (7 downto 0);
    -------------------------------------------------------------------------------
 
 begin
@@ -95,9 +97,12 @@ begin
               CLK      => s_clk_sig);
    -------------------------------------------------------------------------------
    
-   -- sseg display ---------------------------------------------------------------
---   display: sseg_dec
---   port map( 
+    --sseg display ---------------------------------------------------------------
+   display: sseg_dec
+   port map( ALU_VAL => r_SSEG,
+             CLK => s_clk_sig,
+             DISP_EN => ANODES,
+             SEGMENTS => CATHODES);
 
 
    -------------------------------------------------------------------------------
@@ -129,8 +134,8 @@ begin
             if (s_port_id = LEDS_ID) then
                r_LEDS <= s_output_port;
             -- the register definition for the SSEG display    
---            elsif (s_port_id = SSEG_ID) then
---               r_SSEG <= s_output_port;
+            elsif (s_port_id = SSEG_ID) then
+               r_SSEG <= s_output_port;
             end if;
            
          end if;
@@ -141,5 +146,7 @@ begin
    -- Register Interface Assignments ---------------------------------------------
    -- add all outputs that you added to this design
    LEDS <= r_LEDS;
+   
+   
 
 end Behavioral;
