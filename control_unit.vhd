@@ -36,12 +36,12 @@ end control_unit;
 
 architecture Behavioral of control_unit is
 
-component ff is
-    Port ( d_in : in STD_LOGIC;
-           d_out : out STD_LOGIC;
-           clk : in STD_LOGIC;
-           load : in STD_LOGIC);
-end component;
+--component ff is
+--    Port ( d_in : in STD_LOGIC;
+--           d_out : out STD_LOGIC;
+--           clk : in STD_LOGIC;
+--           load : in STD_LOGIC);
+--end component;
 
 signal op : STD_LOGIC_VECTOR(6 downto 0);
 
@@ -298,7 +298,31 @@ when exec =>
     --wsp
     when "0101000" =>
         sp_ld <= '1';
-        
+    
+    --interrupts---------
+    --retie
+    when "0110111" =>
+        sp_incr <= '1';
+        flg_shad_ld <= '1';
+        scr_addr_sel <= "10";
+        pc_mux_sel <= "01";
+        pc_ld <= '1';
+        i_set <= '1';
+        i_clr <= '0';
+    --retid
+    when "0110110" =>
+        sp_incr <= '1';
+        flg_shad_ld <= '1';
+        scr_addr_sel <= "10";
+        pc_mux_sel <= "01";
+        pc_ld <= '1';
+        i_clr <= '1';
+        i_set <= '0';
+    --SEI (set interrupt flag)
+    when "0110100" =>
+        i_set <= '1';
+    --CLI (clear interrupt flag)
+        i_clr <= '1';
         
     --reg-immed ---------
     --and

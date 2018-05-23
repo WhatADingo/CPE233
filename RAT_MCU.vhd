@@ -360,42 +360,6 @@ begin
     end if;
 end process;
 
---reg_in: process(RF_WR_SEL, IN_PORT, DY_OUT, DATA_OUT, SP_OUT, RESULT)
---begin
---    if(RF_WR_SEL = "11") then
---        RF_WR_DATA <= IN_PORT;
---    elsif(RF_WR_SEL = "10") then
---        RF_WR_DATA <= SP_OUT;
---    elsif(RF_WR_SEL = "01") then
---        RF_WR_DATA <= DATA_OUT(7 downto 0);
---    else
---        RF_WR_DATA <= RESULT;
---end if;
---end process;
-
---scr_data: process(SCR_DATA_SEL, DX_OUT, PC_COUNT, DATA_IN) --scr_data_sel mux
---begin
---    if(SCR_DATA_SEL = '1') then
---        DATA_IN <= PC_COUNT;
---    else
---        DATA_IN <= "00" & DX_OUT;
---    end if;
---end process;
-
---addr: process(SCR_ADDR_SEL, DY_OUT, ir, SP_OUT) --scr_addr_sel mux
---begin
---    if(SCR_ADDR_SEL = "00") then
---        SCR_ADDR <= DY_OUT;
---    elsif(SCR_ADDR_SEL = "01") then
---        SCR_ADDR <= ir(7 downto 0);
---    elsif(SCR_ADDR_SEL = "10") then
---        SCR_ADDR <= SP_OUT; --sp data out
---    else
---        SCR_ADDR <= SP_OUT - 1; --sp data out -1
---    end if;
---end process;
-
---SP_OUT <= (others => '0');
 pre_int <= i_out and INT;
 PORT_ID <= ir(7 downto 0);
 OUT_PORT <= DX_OUT;

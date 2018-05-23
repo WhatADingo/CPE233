@@ -8,7 +8,7 @@ entity FLAGS is
            cclr : in STD_LOGIC;
            cld : in STD_LOGIC;
            zld : in STD_LOGIC;
-           flgsel : in STD_LOGIC;
+           flgsel : in STD_LOGIC; -- FLG_LD_SEL
            shadld : in STD_LOGIC;
            cflag : out STD_LOGIC;
            zflag : out STD_LOGIC;
@@ -48,9 +48,9 @@ c_reg:      reg port map(
             
 z_reg:      reg port map(
             load => zld,
+            d_in => z_in,
             set => '0',
             clear => '0',
-            d_in => z_in,
             d_out => shad_z_in,
             clk => clk);
             

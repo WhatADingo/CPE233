@@ -24,7 +24,6 @@ if(rising_edge(clk)) then
         d_out <= '1';
     elsif(load = '1') then
         d_out <= d_in;
---    else null;
     end if;
 end if;
 
