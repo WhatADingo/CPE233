@@ -40,6 +40,7 @@ component control_unit is
            scr_data_sel : out STD_LOGIC;
            flg_c_set : out STD_LOGIC;
            flg_c_clr : out STD_LOGIC;
+           flg_z_clr : out STD_LOGIC;
            flg_c_ld : out STD_LOGIC;
            flg_z_ld : out STD_LOGIC;
            flg_ld_sel : out STD_LOGIC;
@@ -124,6 +125,7 @@ component FLAGS is
            z : in STD_LOGIC;
            cset : in STD_LOGIC;
            cclr : in STD_LOGIC;
+           zclr : in STD_LOGIC;
            cld : in STD_LOGIC;
            zld : in STD_LOGIC;
            flgsel : in STD_LOGIC;
@@ -218,6 +220,7 @@ signal SCR_WE : std_logic;
 
 signal FLG_C_SET : std_logic;
 signal FLG_C_CLR : std_logic;
+signal FLG_Z_CLR : std_logic;
 signal FLG_C_LD : std_logic;
 signal FLG_Z_LD : std_logic;
 signal FLG_LD_SEL : std_logic;
@@ -253,6 +256,7 @@ control: control_unit port map(
             scr_data_sel => scr_data_sel,
             flg_c_set => flg_c_set,
             flg_c_clr => flg_c_clr,
+            flg_Z_clr => flg_z_clr,
             flg_c_ld => flg_c_ld,
             flg_z_ld => flg_z_ld,
             flg_ld_sel => flg_ld_sel,
@@ -335,6 +339,7 @@ flg:       FLAGS port map(
             z => Z,
             cset => FLG_C_SET,
             cclr => FLG_C_CLR,
+            zclr => FLG_Z_CLR,
             cld => FLG_C_LD,
             zld => FLG_Z_LD,
             flgsel => FLG_LD_SEL,

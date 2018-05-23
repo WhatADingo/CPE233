@@ -26,6 +26,7 @@ entity control_unit is
            scr_data_sel : out STD_LOGIC;
            flg_c_set : out STD_LOGIC;
            flg_c_clr : out STD_LOGIC;
+           flg_z_clr : out STD_LOGIC;
            flg_c_ld : out STD_LOGIC;
            flg_z_ld : out STD_LOGIC;
            flg_ld_sel : out STD_LOGIC;
@@ -45,7 +46,7 @@ architecture Behavioral of control_unit is
 
 signal op : STD_LOGIC_VECTOR(6 downto 0);
 
-type state is (init, fetch, exec);
+type state is (init, fetch, exec, interrupt);
 signal q, qn : state;
 
 begin
@@ -97,7 +98,12 @@ when fetch =>
     qn <= exec;
     pc_inc <= '1';
 when exec =>
-    qn <= fetch;
+    if int = '1' then
+        qn <= interrupt;
+    else
+        qn <= fetch;
+    end if;
+    
     pc_inc <= '0';
     
     case op is
@@ -444,6 +450,18 @@ when exec =>
         io_strb <= '0';
         
     end case;
+
+when interrupt =>
+    i_clr <= '1';
+    flg_shad_ld <= '1';
+    flg_c_clr <= '1';
+    flg_z_clr <= '1';
+    pc_ld <= '1';
+    sp_ld <= '1';
+    scr_we <= '1';
+    scr_addr_sel <= "11";
+    qn <= fetch;
+    
 end case;
 
 end process;

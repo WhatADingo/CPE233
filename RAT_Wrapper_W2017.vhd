@@ -60,6 +60,13 @@ architecture Behavioral of RAT_wrapper is
    end component sseg_dec;
    -----------------------------------------------------------------------------
    
+   -- db_1shot ---------------------------------------------------------------
+   component db_1shot_FSM is
+       Port ( A    : in STD_LOGIC;
+              CLK  : in STD_LOGIC;
+              A_DB : out STD_LOGIC);
+   end component db_1shot_FSM;
+   
    -- Signals for connecting RAT_CPU to RAT_wrapper -------------------------------
    signal s_input_port  : std_logic_vector (7 downto 0);
    signal s_output_port : std_logic_vector (7 downto 0);

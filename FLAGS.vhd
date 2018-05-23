@@ -6,6 +6,7 @@ entity FLAGS is
            z : in STD_LOGIC;
            cset : in STD_LOGIC;
            cclr : in STD_LOGIC;
+           zclr : in STD_LOGIC;
            cld : in STD_LOGIC;
            zld : in STD_LOGIC;
            flgsel : in STD_LOGIC; -- FLG_LD_SEL
@@ -65,7 +66,7 @@ c_shad_reg: reg port map(
 z_shad_reg: reg port map(
             load => shadld,
             set => '0',
-            clear => '0',
+            clear => zclr,
             d_in => shad_z_in,
             d_out => shad_z_out,
             clk => clk);
