@@ -20,7 +20,8 @@ entity RAT_wrapper is
            RST      : in    STD_LOGIC;
            CLK      : in    STD_LOGIC;
            ANODES   : out   std_logic_vector (3 downto 0);
-           CATHODES : out   std_logic_vector (7 downto 0));
+           CATHODES : out   std_logic_vector (7 downto 0);
+           interrupt: in   std_logic);
 end RAT_wrapper;
 
 architecture Behavioral of RAT_wrapper is
@@ -73,7 +74,7 @@ architecture Behavioral of RAT_wrapper is
    signal s_port_id     : std_logic_vector (7 downto 0);
    signal s_load        : std_logic;
    signal s_clk_sig     : std_logic := '0';
-   --signal s_interrupt   : std_logic; -- not yet used
+   signal s_interrupt   : std_logic;
    
    -- Register definitions for output devices ------------------------------------
    -- add signals for any added outputs
@@ -100,7 +101,7 @@ begin
               PORT_ID  => s_port_id,
               RESET    => RST,
               IO_STRB  => s_load,
-              INT   => '0',  -- s_interrupt
+              INT      => s_interrupt,
               CLK      => s_clk_sig);
    -------------------------------------------------------------------------------
    
@@ -110,9 +111,13 @@ begin
              CLK => s_clk_sig,
              DISP_EN => ANODES,
              SEGMENTS => CATHODES);
-
-
    -------------------------------------------------------------------------------
+   
+   --debounce_1shot ---------------------------------------------------------------
+   debounce: db_1shot_fsm
+   port map ( A => interrupt,
+              CLK => s_clk_sig,
+              A_DB => s_interrupt);
    -- MUX for selecting what input to read ---------------------------------------
    -- add conditions and connections for any added PORT IDs
    -------------------------------------------------------------------------------
@@ -123,6 +128,7 @@ begin
       else
          s_input_port <= x"00";
       end if;
+      
    end process inputs;
    -------------------------------------------------------------------------------
 

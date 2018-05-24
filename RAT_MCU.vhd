@@ -349,7 +349,7 @@ flg:       FLAGS port map(
             clk => CLK);
             
 i_reg: reg port map(
-            load => '1',
+            load => '0',
             set => i_set,
             clear => i_clr,
             d_in => '0',
