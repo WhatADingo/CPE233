@@ -44,7 +44,7 @@ c_reg:      reg port map(
             set => cset,
             clear => cclr,
             d_in => c_in,
-            d_out => shad_c_in,
+            d_out => cflag,
             clk => clk);
             
 z_reg:      reg port map(
@@ -52,7 +52,7 @@ z_reg:      reg port map(
             d_in => z_in,
             set => '0',
             clear => '0',
-            d_out => shad_z_in,
+            d_out => zflag,
             clk => clk);
             
 c_shad_reg: reg port map(

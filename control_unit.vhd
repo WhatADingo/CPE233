@@ -63,7 +63,7 @@ begin
 end process;
 
 
-states: process(q, qn, op, c_flag, z_flag)
+states: process(q, qn, op, c_flag, z_flag, int)
 begin
 
     i_set <= '0';
@@ -83,6 +83,7 @@ begin
     scr_data_sel <= '0';
     flg_c_set <= '0';
     flg_c_clr <= '0';
+    flg_z_clr <= '0';
     flg_c_ld <= '0';
     flg_z_ld <= '0';
     flg_ld_sel <= '0';
@@ -442,6 +443,7 @@ when exec =>
         scr_data_sel <= '0';
         flg_c_set <= '0';
         flg_c_clr <= '0';
+        flg_z_clr <= '0';
         flg_c_ld <= '0';
         flg_z_ld <= '0';
         flg_ld_sel <= '0';
@@ -456,10 +458,15 @@ when interrupt =>
     flg_shad_ld <= '1';
     flg_c_clr <= '1';
     flg_z_clr <= '1';
+    scr_data_sel <= '1';
+    pc_mux_sel <= "10";
     pc_ld <= '1';
-    sp_ld <= '1';
+    sp_decr <= '1';
     scr_we <= '1';
     scr_addr_sel <= "11";
+    qn <= fetch;
+    
+when others =>
     qn <= fetch;
     
 end case;
