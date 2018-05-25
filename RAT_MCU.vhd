@@ -124,6 +124,8 @@ component FLAGS is
     Port ( c : in STD_LOGIC;
            z : in STD_LOGIC;
            cset : in STD_LOGIC;
+           i_set: in std_logic;
+           i_clr: in std_logic;
            cclr : in STD_LOGIC;
            zclr : in STD_LOGIC;
            cld : in STD_LOGIC;
@@ -132,6 +134,7 @@ component FLAGS is
            shadld : in STD_LOGIC;
            cflag : out STD_LOGIC;
            zflag : out STD_LOGIC;
+           iflag : out std_logic;
            clk : in STD_LOGIC);
 end component;
 
@@ -337,6 +340,8 @@ scr_d_mux: scr_data_mux port map(
 flg:       FLAGS port map(
             c => C,
             z => Z,
+            i_set => i_set,
+            i_clr => i_clr,
             cset => FLG_C_SET,
             cclr => FLG_C_CLR,
             zclr => FLG_Z_CLR,
@@ -346,15 +351,16 @@ flg:       FLAGS port map(
             shadld => FLG_SHAD_LD,
             cflag => c_to_cin,
             zflag => Z_flag,
+            iflag => i_out,
             clk => CLK);
             
-i_reg: reg port map(
-            load => '0',
-            set => i_set,
-            clear => i_clr,
-            d_in => '0',
-            d_out => i_out,
-            clk => clk);
+--i_reg: reg port map(
+--            load => '0',
+--            set => i_set,
+--            clear => i_clr,
+--            d_in => '0',
+--            d_out => i_out,
+--            clk => clk);
             
 alu_b: process(ALU_OPY, ALU_OPY_SEL, DY_OUT, ir)
 begin

@@ -5,6 +5,8 @@ entity FLAGS is
     Port ( c : in STD_LOGIC;
            z : in STD_LOGIC;
            cset : in STD_LOGIC;
+           i_set : in STD_LOGIC;
+           i_clr : in STD_LOGIC;
            cclr : in STD_LOGIC;
            zclr : in STD_LOGIC;
            cld : in STD_LOGIC;
@@ -13,6 +15,7 @@ entity FLAGS is
            shadld : in STD_LOGIC;
            cflag : out STD_LOGIC;
            zflag : out STD_LOGIC;
+           iflag : out STD_LOGIC;
            clk : in STD_LOGIC);
 end FLAGS;
 
@@ -29,22 +32,21 @@ end component;
 
 signal c_in : std_logic;
 signal z_in : std_logic;
-signal shad_c_in : std_logic;
-signal shad_z_in : std_logic;
 signal shad_c_out : std_logic;
 signal shad_z_out : std_logic;
+signal pre_shadc : std_logic;
+signal pre_shadz :std_logic;
+signal shad_c_in : STD_LOGIC;
+signal shad_z_in : STD_LOGIC;
+
 
 begin
-
-cflag <= shad_c_in;
-zflag <= shad_z_in;
-
 c_reg:      reg port map(
             load => cld,
             set => cset,
             clear => cclr,
             d_in => c_in,
-            d_out => cflag,
+            d_out => pre_shadc,
             clk => clk);
             
 z_reg:      reg port map(
@@ -52,7 +54,7 @@ z_reg:      reg port map(
             d_in => z_in,
             set => '0',
             clear => '0',
-            d_out => zflag,
+            d_out => pre_shadz,
             clk => clk);
             
 c_shad_reg: reg port map(
@@ -70,9 +72,25 @@ z_shad_reg: reg port map(
             d_in => shad_z_in,
             d_out => shad_z_out,
             clk => clk);
+            
+i_reg: reg port map(
+            load => '0',
+            set => i_set,
+            clear => i_clr,
+            d_in => '0',
+            d_out => iflag,
+            clk => clk);
+            
 
-mux: process(flgsel, c, z, shad_c_out, shad_z_out)
+mux: process(shadld,flgsel, c, z, shad_c_out, shad_z_out, pre_shadz, pre_shadc)
 begin
+if (shadld = '1') then
+    shad_c_in <= pre_shadc;
+    shad_z_in <= pre_shadz;
+else
+    zflag <= pre_shadz;
+    cflag <= pre_shadc;
+end if;
 
 if(flgsel = '0') then
     c_in <= c;
@@ -81,6 +99,7 @@ else
     c_in <= shad_c_out;
     z_in <= shad_z_out;
 end if;
+
     
 end process;
 
