@@ -26,7 +26,7 @@ entity control_unit is
            scr_data_sel : out STD_LOGIC;
            flg_c_set : out STD_LOGIC;
            flg_c_clr : out STD_LOGIC;
-           flg_z_clr : out STD_LOGIC;
+    --       flg_z_clr : out STD_LOGIC;
            flg_c_ld : out STD_LOGIC;
            flg_z_ld : out STD_LOGIC;
            flg_ld_sel : out STD_LOGIC;
@@ -83,7 +83,7 @@ begin
     scr_data_sel <= '0';
     flg_c_set <= '0';
     flg_c_clr <= '0';
-    flg_z_clr <= '0';
+--    flg_z_clr <= '0';
     flg_c_ld <= '0';
     flg_z_ld <= '0';
     flg_ld_sel <= '0';
@@ -302,6 +302,7 @@ when exec =>
         scr_addr_sel <= "10";
         sp_incr <= '1';
         pc_ld <= '1';
+    --    sp_ld <= '1';
     --wsp
     when "0101000" =>
         sp_ld <= '1';
@@ -309,8 +310,12 @@ when exec =>
     --interrupts---------
     --retie
     when "0110111" =>
-        sp_incr <= '1';
-        flg_shad_ld <= '1';
+       sp_incr <= '1';
+ --       sp_ld <= '1';
+ --       flg_shad_ld <= '1';
+        flg_ld_sel <= '1';
+        flg_z_ld <= '1';
+        flg_c_ld <= '1';
         scr_addr_sel <= "10";
         pc_mux_sel <= "01";
         pc_ld <= '1';
@@ -319,7 +324,11 @@ when exec =>
     --retid
     when "0110110" =>
         sp_incr <= '1';
-        flg_shad_ld <= '1';
+ --       sp_ld <= '1';
+ --       flg_shad_ld <= '1';
+        flg_ld_sel <= '1';
+        flg_z_ld <= '1';
+        flg_c_ld <= '1';
         scr_addr_sel <= "10";
         pc_mux_sel <= "01";
         pc_ld <= '1';
@@ -329,6 +338,7 @@ when exec =>
     when "0110100" =>
         i_set <= '1';
     --CLI (clear interrupt flag)
+    when "0110101" =>     
         i_clr <= '1';
         
     --reg-immed ---------
@@ -443,7 +453,7 @@ when exec =>
         scr_data_sel <= '0';
         flg_c_set <= '0';
         flg_c_clr <= '0';
-        flg_z_clr <= '0';
+ --       flg_z_clr <= '0';
         flg_c_ld <= '0';
         flg_z_ld <= '0';
         flg_ld_sel <= '0';
@@ -456,8 +466,9 @@ when exec =>
 when interrupt =>
     i_clr <= '1';
     flg_shad_ld <= '1';
-    flg_c_clr <= '1';
-    flg_z_clr <= '1';
+--    flg_ld_sel <= '1';
+    --flg_c_clr <= '1';
+    --flg_z_clr <= '1';
     scr_data_sel <= '1';
     pc_mux_sel <= "10";
     pc_ld <= '1';
@@ -467,7 +478,7 @@ when interrupt =>
     qn <= fetch;
     
 when others =>
-    qn <= fetch;
+    qn <= init;
     
 end case;
 

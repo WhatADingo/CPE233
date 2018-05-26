@@ -18,10 +18,10 @@ proc: process(load, set, clear, d_in, clk)
 begin
 
 if(rising_edge(clk)) then
-    if(clear = '1') then
-        d_out <= '0';
-    elsif(set = '1') then
+    if(set = '1') then
         d_out <= '1';
+    elsif(clear = '1') then
+        d_out <= '0';
     elsif(load = '1') then
         d_out <= d_in;
     end if;

@@ -8,7 +8,6 @@ entity FLAGS is
            i_set : in STD_LOGIC;
            i_clr : in STD_LOGIC;
            cclr : in STD_LOGIC;
-           zclr : in STD_LOGIC;
            cld : in STD_LOGIC;
            zld : in STD_LOGIC;
            flgsel : in STD_LOGIC; -- FLG_LD_SEL
@@ -34,8 +33,8 @@ signal c_in : std_logic;
 signal z_in : std_logic;
 signal shad_c_out : std_logic;
 signal shad_z_out : std_logic;
-signal pre_shadc : std_logic;
-signal pre_shadz :std_logic;
+signal pre_shadc : std_logic; -- signal of cflag register output, attached to cflag and shadow flag input
+signal pre_shadz :std_logic; -- same as above but for z flags
 signal shad_c_in : STD_LOGIC;
 signal shad_z_in : STD_LOGIC;
 
@@ -68,7 +67,7 @@ c_shad_reg: reg port map(
 z_shad_reg: reg port map(
             load => shadld,
             set => '0',
-            clear => zclr,
+            clear => '0',
             d_in => shad_z_in,
             d_out => shad_z_out,
             clk => clk);
@@ -81,16 +80,12 @@ i_reg: reg port map(
             d_out => iflag,
             clk => clk);
             
-
+zflag <= pre_shadz;
+cflag <= pre_shadc;
+shad_c_in <= pre_shadc;
+shad_z_in <= pre_shadz;
 mux: process(shadld,flgsel, c, z, shad_c_out, shad_z_out, pre_shadz, pre_shadc)
 begin
-if (shadld = '1') then
-    shad_c_in <= pre_shadc;
-    shad_z_in <= pre_shadz;
-else
-    zflag <= pre_shadz;
-    cflag <= pre_shadc;
-end if;
 
 if(flgsel = '0') then
     c_in <= c;

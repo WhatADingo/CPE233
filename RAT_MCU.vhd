@@ -40,7 +40,6 @@ component control_unit is
            scr_data_sel : out STD_LOGIC;
            flg_c_set : out STD_LOGIC;
            flg_c_clr : out STD_LOGIC;
-           flg_z_clr : out STD_LOGIC;
            flg_c_ld : out STD_LOGIC;
            flg_z_ld : out STD_LOGIC;
            flg_ld_sel : out STD_LOGIC;
@@ -127,7 +126,6 @@ component FLAGS is
            i_set: in std_logic;
            i_clr: in std_logic;
            cclr : in STD_LOGIC;
-           zclr : in STD_LOGIC;
            cld : in STD_LOGIC;
            zld : in STD_LOGIC;
            flgsel : in STD_LOGIC;
@@ -184,7 +182,6 @@ signal ALU_OPY : std_logic_vector(7 downto 0);
 
 signal C : std_logic;
 signal Z : std_logic;
---signal C_IN : std_logic;
 
 signal RESULT : std_logic_vector(7 downto 0);
 
@@ -223,7 +220,6 @@ signal SCR_WE : std_logic;
 
 signal FLG_C_SET : std_logic;
 signal FLG_C_CLR : std_logic;
-signal FLG_Z_CLR : std_logic;
 signal FLG_C_LD : std_logic;
 signal FLG_Z_LD : std_logic;
 signal FLG_LD_SEL : std_logic;
@@ -259,7 +255,6 @@ control: control_unit port map(
             scr_data_sel => scr_data_sel,
             flg_c_set => flg_c_set,
             flg_c_clr => flg_c_clr,
-            flg_Z_clr => flg_z_clr,
             flg_c_ld => flg_c_ld,
             flg_z_ld => flg_z_ld,
             flg_ld_sel => flg_ld_sel,
@@ -344,7 +339,6 @@ flg:       FLAGS port map(
             i_clr => i_clr,
             cset => FLG_C_SET,
             cclr => FLG_C_CLR,
-            zclr => FLG_Z_CLR,
             cld => FLG_C_LD,
             zld => FLG_Z_LD,
             flgsel => FLG_LD_SEL,
@@ -354,14 +348,7 @@ flg:       FLAGS port map(
             iflag => i_out,
             clk => CLK);
             
---i_reg: reg port map(
---            load => '0',
---            set => i_set,
---            clear => i_clr,
---            d_in => '0',
---            d_out => i_out,
---            clk => clk);
-            
+
 alu_b: process(ALU_OPY, ALU_OPY_SEL, DY_OUT, ir)
 begin
     if(ALU_OPY_SEL = '1') then

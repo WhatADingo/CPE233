@@ -31,8 +31,8 @@ end db_1shot_FSM;
 
 architecture Behavioral of db_1shot_FSM is
    
-   constant c_LOW_GOING_HIGH_CLOCKS : std_logic_vector := x"19"; -- 25 clks
-   constant c_HIGH_GOING_LOW_CLOCKS : std_logic_vector := x"33"; -- 50 clks
+   constant c_LOW_GOING_HIGH_CLOCKS : std_logic_vector := x"25"; -- 25 clks
+   constant c_HIGH_GOING_LOW_CLOCKS : std_logic_vector := x"50"; -- 50 clks
    constant c_ONE_SHOT_CLOCKS       : std_logic_vector := x"03"; -- 3 clks
    
    component Counter is

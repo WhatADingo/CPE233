@@ -47,6 +47,7 @@ begin
 --        INT <= '0';
 --        IN_PORT <= "00100000";
         RESET <= '0';
+        INT <= '1';
         IN_PORT <= "11010110";
         wait for 20 ns;
 --        wait for 20 ns;
