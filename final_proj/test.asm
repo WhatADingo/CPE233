@@ -32,20 +32,20 @@
 init:
          CALL   draw_background         ; draw using default color
 
-         MOV    r7, 0x0F                ; generic Y coordinate
-         MOV    r8, 0x14                ; generic X coordinate
-         MOV    r6, 0xE0                ; color
-         CALL   draw_dot                ; draw red pixel 
+         ;MOV    r7, 0x0F                ; generic Y coordinate
+         ;MOV    r8, 0x14                ; generic X coordinate
+         ;MOV    r6, 0xE0                ; color
+         ;CALL   draw_dot                ; draw red pixel 
 
-         MOV    r8,0x01                 ; starting x coordinate
-         MOV    r7,0x12                 ; start y coordinate
-         MOV    r9,0x26                 ; ending x coordinate
-         CALL   draw_horizontal_line
+         ;MOV    r8,0x01                 ; starting x coordinate
+         ;MOV    r7,0x12                 ; start y coordinate
+         ;MOV    r9,0x26                 ; ending x coordinate
+         ;CALL   draw_horizontal_line
 
-         MOV    r8,0x08                 ; starting x coordinate
-         MOV    r7,0x04                 ; start y coordinate
-         MOV    r9,0x17                 ; ending x coordinate
-         CALL   draw_vertical_line
+         ;MOV    r8,0x08                 ; starting x coordinate
+         ;MOV    r7,0x04                 ; start y coordinate
+         ;MOV    r9,0x17                 ; ending x coordinate
+         ;CALL   draw_vertical_line
       
 main:    AND    r0, r0                  ; nop
          BRN    main                    ; continuous loop 
