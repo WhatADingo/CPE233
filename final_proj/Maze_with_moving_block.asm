@@ -41,6 +41,9 @@ init:
 		CALL	draw_maze
 
 main:   AND    r0, r0                  ; nop
+
+		CALL	move_block
+	
         BRN    main                    ; continuous loop 
 
 ;--------------------------------------------------------------------
@@ -782,10 +785,10 @@ draw_maze:
 draw_block: MOV r6,M_YELLOW
 
 			MOV r10,0x00
-			MOV r11,0x03
+			MOV r11,0x02
 			CALL draw_dot
 
-Move_block: IN r15,button
+move_block: IN r15,button
 			TimeDelay:	MOV r16,For_Count
 						SUB r16,0x01
 			ASR r15
