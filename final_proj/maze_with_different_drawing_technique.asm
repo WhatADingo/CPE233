@@ -7,20 +7,27 @@
 .EQU SSEG = 0x81
 .EQU LEDS = 0x40
 
-.EQU BG_COLOR       = 0xFF             ; Background:  white
+.EQU BG_COLOR   = 0xFF             ; Background:  white
 
-.EQU M_YELLOW		= 0xF8
-.EQU M_RED			= 0xE0
-.EQU M_BLUE			= 0x13
-.EQU M_BLACK		= 0x00
-.EQU M_BROWN		= 0x90
+.EQU YELLOW		= 0xF8
+.EQU RED		= 0xE0
+.EQU BLUE		= 0x13
+.EQU BLACK		= 0x00
+.EQU BROWN		= 0x90
+.EQU WHITE		= 0xFF
 
 .EQU button         = 0x9A
-.EQU For_Count		= 0xAA
+.EQU For_Count		= 0xFF
 
 ;r6 is used for color
-;r7 is used for Y
-;r8 is used for X
+;r7 used for y drawing location
+;r8 used for x drawing location
+;r9 used for ending location
+;r10 used to store current y location
+;r11 used to store current x location
+;r12 used to store maze pattern
+;r13 used for maze pattern counter
+
 ;---------------------------------------------------------------------
 init:
          CALL   draw_background         ; draw using default color
@@ -38,7 +45,8 @@ init:
          ;MOV    r9,0x17                 ; ending x coordinate
          ;CALL   draw_vertical_line
   
-		CALL	draw_maze
+		CALL	draw_maze_structure
+		CALL	draw_maze_pattern
 
 main:   AND    r0, r0                  ; nop
 
@@ -46,20 +54,6 @@ main:   AND    r0, r0                  ; nop
 	
         BRN    main                    ; continuous loop 
 
-;--------------------------------------------------------------------
-
-;--------------------------------------------------------------------
-;-  Subroutine: draw_horizontal_line
-;-
-;-  Draws a horizontal line from (r8,r7) to (r9,r7) using color in r6
-;-
-;-  Parameters:
-;-   r8  = starting x-coordinate
-;-   r7  = y-coordinate
-;-   r9  = ending x-coordinate
-;-   r6  = color used for line
-;-
-;- Tweaked registers: r8,r9
 ;--------------------------------------------------------------------
 
 draw_horizontal_line:
@@ -72,22 +66,6 @@ draw_horiz1:
         BRNE   draw_horiz1
         RET
 
-;--------------------------------------------------------------------
-
-;---------------------------------------------------------------------
-;-  Subroutine: draw_vertical_line
-;-
-;-  Draws a horizontal line from (r8,r7) to (r8,r9) using color in r6
-;-
-;-  Parameters:
-;-   r8  = x-coordinate
-;-   r7  = starting y-coordinate
-;-   r9  = ending y-coordinate
-;-   r6  = color used for line
-;- 
-;- Tweaked registers: r7,r9
-;--------------------------------------------------------------------
-
 draw_vertical_line:
          ADD    r9,0x01
 
@@ -97,17 +75,6 @@ draw_vert1:
          CMP    r7,R9
          BRNE   draw_vert1
          RET
-
-;--------------------------------------------------------------------
-
-;---------------------------------------------------------------------
-;-  Subroutine: draw_background
-;-
-;-  Fills the 30x40 grid with one color using successive calls to 
-;-  draw_horizontal_line subroutine. 
-;- 
-;-  Tweaked registers: r13,r7,r8,r9
-;----------------------------------------------------------------------
 
 draw_background: 
          MOV   r6,BG_COLOR              ; use default color
@@ -121,19 +88,6 @@ start:   MOV   r7,r13                   ; load current row count
          CMP   r13,0x1D                 ; see if more rows to draw
          BRNE  start                    ; branch to draw more rows
          RET
-
-;---------------------------------------------------------------------
-
- 
-;---------------------------------------------------------------------
-;- Subrountine: draw_dot
-;- 
-;- This subroutine draws a dot on the display the given coordinates: 
-;- 
-;- (X,Y) = (r8,r7)  with a color stored in r6  
-;- 
-;- Tweaked registers: r4,r5
-;---------------------------------------------------------------------
 
 draw_dot: 
            MOV   r4,r7         ; copy Y coordinate
@@ -161,7 +115,7 @@ dd_add80:  OR    r5,0x80       ; set bit if needed
 ; --------------------------------------------------------------------
 
 draw_maze_structure: 
-			MOV r6,M_BLACK
+			MOV r6, BLACK
 
 			;borders
 			MOV    r8,0x01                 ; starting x coordinate
@@ -188,17 +142,110 @@ draw_maze_structure:
 			MOV r8,0x03   ; starting x coordinate
 			MOV r7,0x03   ; starting y coordinate
 
-	loop:
+structure_loop:
 			CALL draw_dot
 			ADD r8, 0x02	;increment x location of dot drawing
 			CMP r8, 0x26	;until it reaches the right edge of maze
-			BRCC loop
+			BRCC structure_loop
 			MOV r8, 0x03	;initialize x location back to starting x location
 			ADD r7, 0x02	;increment y location of dot drawing
 			CMP r7, 0x1c	;until it reaches the bottom edge of maze
-			BRCC loop
+			BRCC structure_loop
 			CALL initialize_location	;changes location back to known
 			
+			RET
+
+draw_pattern:
+			MOV r13, 0x00	;initialize data counter
+
+	maze_pattern_loop:
+			ASR r12			;move lsb into carry
+			CALL black_or_white	;assign color based on carry bit
+			CALL draw_dot		;draw dot
+
+			ADD r13, 0x01	;increment counter
+			CMP r13, 0x07	;run for 8 times till end of data at r12 (pattern register)
+			BRCS RET		;finish draw_pattern once all 8 data points are drawn, also leaves drawing location alone (doesn't change it back)
+
+			ADD r7, 0x02	;increment y location
+			CMP r7, 0x1b
+			BRCC maze_pattern_loop
+			MOV r7, 0x02
+			ADD r8, 0x02	;increment x location
+			CMP r8, 0x26
+			BRCC maze_pattern_loop
+			
+			RET
+
+draw_maze_pattern:
+			MOV r8,0x02   ; starting x coordinate
+			MOV r7,0x03   ; starting y coordinate
+			
+			;blocks of code grouped into every 8 columns
+			MOV r13, 0x90
+			CALL draw_pattern
+			MOV r13, 0x80
+			CALL draw_pattern
+			MOV r13, 0xDD
+			CALL draw_pattern
+			MOV r13, 0x70
+			CALL draw_pattern
+			MOV r13, 0xC9
+			CALL draw_pattern
+			MOV r13, 0x85
+			CALL draw_pattern
+			MOV r13, 0x74
+			CALL draw_pattern
+			MOV r13, 0x2A
+			CALL draw_pattern
+			MOV r13, 0xA2
+			CALL draw_pattern
+			MOV r13, 0xAD
+			CALL draw_pattern
+			MOV r13, 0x2C
+			CALL draw_pattern
+			MOV r13, 0x5A
+			CALL draw_pattern
+			MOV r13, 0x62
+			CALL draw_pattern
+
+			MOV r13, 0x90
+			CALL draw_pattern
+			MOV r13, 0x80
+			CALL draw_pattern
+			MOV r13, 0xDD
+			CALL draw_pattern
+			MOV r13, 0x70
+			CALL draw_pattern
+			MOV r13, 0xC9
+			CALL draw_pattern
+			MOV r13, 0x85
+			CALL draw_pattern
+			MOV r13, 0x74
+			CALL draw_pattern
+			MOV r13, 0x2A
+			CALL draw_pattern
+			MOV r13, 0xA2
+			CALL draw_pattern
+			MOV r13, 0xAD
+			CALL draw_pattern
+			MOV r13, 0x2C
+			CALL draw_pattern
+			MOV r13, 0x5A
+			CALL draw_pattern
+			MOV r13, 0x62
+			CALL draw_pattern
+
+			
+
+black_or_white:
+			BRCS	draw_black
+			CALL draw_white
+	draw_black:
+			MOV r6, BLACK
+			RET
+	draw_white:
+			MOV r6, WHITE
 			RET
 
 initialize_location:
@@ -206,7 +253,7 @@ initialize_location:
 			MOV r7,0x00   ; starting y coordinate
 			RET
 
-draw_block: MOV r6,M_YELLOW
+draw_block: MOV r6, YELLOW
 
 			MOV r10,0x00
 			MOV r11,0x02
@@ -231,83 +278,87 @@ move_right:
 		
 		;maze boundary check
 		CMP	   r8, 0x25
-		BREQ	end
+		BREQ	RET
 		
 		;draw pixel at new location
 		MOV    r7, r10
 		MOV    r8, r11
 		ADD	   r8, 0x01
-		MOV    r6, M_YELLOW
+		MOV    r6, YELLOW
 		CALL   draw_dot
+
+		;change to new location
+		MOV		r11, r8
 
 		;draw background at previous location
-		MOV    r7, r10
-		MOV    r8, r11
-		MOV    r6, BG_COLOR
-		CALL   draw_dot
-
+		CALL erase
 		RET
 
 move_left:
 		
 		;maze boundary check
 		CMP	   r8, 0x01
-		BREQ	end
+		BREQ	RET
 		
 		;draw pixel at new location
 		MOV    r7, r10
 		MOV    r8, r11
 		SUB	   r8, 0x01
-		MOV    r6, M_YELLOW
+		MOV    r6, YELLOW
 		CALL   draw_dot
 
+		;change to new location
+		MOV		r11, r8
+
 		;draw background at previous location
-		MOV    r7, r10
-		MOV    r8, r11
-		MOV    r6, BG_COLOR
-		CALL   draw_dot
-		
+		CALL erase
 		RET
 
 move_up:
 		
 		;maze boundary check
 		CMP	   r7, 0x01
-		BREQ	end
+		BREQ	RET
 		
 		;draw pixel at new location
 		MOV    r7, r10
 		MOV    r8, r11
 		ADD	   r7, 0x01
-		MOV    r6, M_YELLOW
+		MOV    r6, YELLOW
 		CALL   draw_dot
 
+		;change to new location
+		MOV		r10, r7
+
 		;draw background at previous location
-		MOV    r7, r10
-		MOV    r8, r11
-		MOV    r6, BG_COLOR
-		CALL   draw_dot
-		
+		CALL erase
 		RET
 
 move_down:
 		
 		;maze boundary check
 		CMP	   r7, 0x1b
-		BREQ	end
+		BREQ	RET
 		
 		;draw pixel at new location
 		MOV    r7, r10
 		MOV    r8, r11
 		SUB	   r7, 0x01
-        MOV    r6, M_YELLOW
+        MOV    r6, YELLOW
 		CALL   draw_dot
 
+		;change to new location
+		MOV		r10, r7
+
 		;draw background at previous location
+		CALL erase
+		RET
+
+erase:
 		MOV    r7, r10
 		MOV    r8, r11
 		MOV    r6, BG_COLOR
 		CALL   draw_dot
-		
 		RET
-			
+
+
