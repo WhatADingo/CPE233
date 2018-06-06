@@ -41,9 +41,7 @@ init:
 		CALL	draw_maze
 		CALL	draw_block
 
-main:   AND    r0, r0                  ; nop
-
-		CALL	move_block
+main:   CALL	move_block
 	
         BRN    main                    ; continuous loop 
 
@@ -797,9 +795,9 @@ draw_block: MOV r6,M_YELLOW
 			CALL draw_dot
 
 move_block: IN r15,button
-			TimeDelay:	MOV r16,For_Count
-						SUB r16,0x01
-						BRNE TimeDelay
+	;		MOV r16,For_Count
+	;TimeDelay:	SUB r16,0x01
+	;			BRNE TimeDelay
 			ASR r15
 			BRCS move_right
 			ASR r15
@@ -813,7 +811,7 @@ move_right:
 		
 		;maze boundary check
 		CMP	   r8, 0x25
-		BREQ	end
+		BREQ	RET
 		
 		;draw pixel at new location
 		ADD	   r11, 0x01
@@ -828,13 +826,13 @@ move_right:
 		MOV    r6, BG_COLOR
 		CALL   draw_dot
 
-		BRN 	end
+		RET
 
 move_left:
 		
 		;maze boundary check
 		CMP	   r8, 0x01
-		BREQ	end
+		BREQ	RET
 		
 		;draw pixel at new location
 		SUB	   r11, 0x01
@@ -849,13 +847,13 @@ move_left:
 		MOV    r6, BG_COLOR
 		CALL   draw_dot
 		
-		BRN 	end
+		RET
 
 move_up:
 		
 		;maze boundary check
 		CMP	   r7, 0x01
-		BREQ	end
+		BREQ	RET
 		
 		;draw pixel at new location
 		ADD	   r10, 0x01
@@ -870,13 +868,13 @@ move_up:
 		MOV    r6, BG_COLOR
 		CALL   draw_dot
 		
-		BRN 	end
+		RET
 
 move_down:
 		
 		;maze boundary check
 		CMP	   r7, 0x1b
-		BREQ	end
+		BREQ	RET
 		
 		;draw pixel at new location
 		SUB	   r10, 0x01
@@ -891,6 +889,4 @@ move_down:
 		MOV    r6, BG_COLOR
 		CALL   draw_dot
 		
-		BRN 	end
-
-end:	RET
+		RET
