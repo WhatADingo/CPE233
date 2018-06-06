@@ -168,16 +168,17 @@ draw_pattern:
 			BRCS RET		;finish draw_pattern once all 8 data points are drawn, also leaves drawing location alone (doesn't change it back)
 
 			ADD r7, 0x02	;increment y location
-			CMP r7, 0x1b
+			CMP r7, 0x1c
 			BRCC maze_pattern_loop
 			MOV r7, 0x02
 			ADD r8, 0x02	;increment x location
-			CMP r8, 0x26
+			CMP r8, 0x27
 			BRCC maze_pattern_loop
 			
 			RET
 
 draw_maze_pattern:
+			;first half
 			MOV r8,0x02   ; starting x coordinate
 			MOV r7,0x03   ; starting y coordinate
 			
@@ -209,34 +210,119 @@ draw_maze_pattern:
 			MOV r13, 0x62
 			CALL draw_pattern
 
-			MOV r13, 0x90
+			MOV r13, 0xCA
 			CALL draw_pattern
-			MOV r13, 0x80
-			CALL draw_pattern
-			MOV r13, 0xDD
+			MOV r13, 0xF5
 			CALL draw_pattern
 			MOV r13, 0x70
 			CALL draw_pattern
-			MOV r13, 0xC9
+			MOV r13, 0x6A
 			CALL draw_pattern
-			MOV r13, 0x85
+			MOV r13, 0xFF
 			CALL draw_pattern
-			MOV r13, 0x74
+			MOV r13, 0x1D
 			CALL draw_pattern
-			MOV r13, 0x2A
+			MOV r13, 0x5E
 			CALL draw_pattern
-			MOV r13, 0xA2
+			MOV r13, 0x9F
 			CALL draw_pattern
-			MOV r13, 0xAD
+			MOV r13, 0x41
 			CALL draw_pattern
-			MOV r13, 0x2C
+			MOV r13, 0x79
+			CALL draw_pattern
+			MOV r13, 0xEE
+			CALL draw_pattern
+			MOV r13, 0x16
+			CALL draw_pattern
+			MOV r13, 0x76
+			CALL draw_pattern
+
+			MOV r13, 0x87
+			CALL draw_pattern
+			MOV r13, 0x77
+			CALL draw_pattern
+			MOV r13, 0x78
+			CALL draw_pattern
+			MOV r13, 0x00
+			CALL draw_pattern
+			MOV r13, 0x01
+			CALL draw_pattern
+			
+			;second half
+			MOV r8,0x02   ; starting x coordinate
+			MOV r7,0x03   ; starting y coordinate
+			
+			;blocks of code grouped into every 8 columns
+			MOV r13, 0x46
+			CALL draw_pattern
+			MOV r13, 0xDE
+			CALL draw_pattern
+			MOV r13, 0xCC
+			CALL draw_pattern
+			MOV r13, 0xA4
+			CALL draw_pattern
+			MOV r13, 0xBA
+			CALL draw_pattern
+			MOV r13, 0x61
+			CALL draw_pattern
+			MOV r13, 0xD9
+			CALL draw_pattern
+
+			MOV r13, 0xA8
+			CALL draw_pattern
+			MOV r13, 0x5D
+			CALL draw_pattern
+			MOV r13, 0x87
+			CALL draw_pattern
+			MOV r13, 0x52
+			CALL draw_pattern
+			MOV r13, 0x77
+			CALL draw_pattern
+			MOV r13, 0xE3
+			CALL draw_pattern
+			MOV r13, 0x1C
+			CALL draw_pattern
+			
+			MOV r13, 0x31
+			CALL draw_pattern
+			MOV r13, 0x18
+			CALL draw_pattern
+			MOV r13, 0x9E
 			CALL draw_pattern
 			MOV r13, 0x5A
 			CALL draw_pattern
-			MOV r13, 0x62
+			MOV r13, 0x08
+			CALL draw_pattern
+			MOV r13, 0x98
+			CALL draw_pattern
+			MOV r13, 0x1E
 			CALL draw_pattern
 
+			MOV r13, 0x12
+			CALL draw_pattern
+			MOV r13, 0x04
+			CALL draw_pattern
+			MOV r13, 0xA7
+			CALL draw_pattern
+			MOV r13, 0xD1
+			CALL draw_pattern
+			MOV r13, 0x00
+			CALL draw_pattern
+			MOV r13, 0xE0
+			CALL draw_pattern
+			MOV r13, 0x4B
+			CALL draw_pattern
 			
+			MOV r13, 0x68
+			CALL draw_pattern
+			MOV r13, 0x98
+			CALL draw_pattern
+			MOV r13, 0x1F
+			CALL draw_pattern
+			MOV r13, 0x0F
+			CALL draw_pattern
+
+			RET
 
 black_or_white:
 			BRCS	draw_black
