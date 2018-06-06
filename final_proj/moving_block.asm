@@ -39,6 +39,7 @@ init:
          ;CALL   draw_vertical_line
   
 		CALL	draw_maze
+		CALL	draw_block
 
 main:   AND    r0, r0                  ; nop
 
@@ -790,7 +791,9 @@ draw_maze:
 draw_block: MOV r6,M_YELLOW
 
 			MOV r10,0x00
+			MOV r7, r10
 			MOV r11,0x02
+			MOV r8, r11
 			CALL draw_dot
 
 move_block: IN r15,button
