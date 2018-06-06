@@ -25,34 +25,19 @@
 ;r9 used for ending location
 ;r10 used to store current y location
 ;r11 used to store current x location
-;r12 used to store maze pattern
-;r13 used for maze pattern counter
+;r12 used for maze counter
+;r13 used for maze pattern data
 
 ;---------------------------------------------------------------------
 init:
-         CALL   draw_background         ; draw using default color
-         ;MOV    r7, 0x0F                ; generic Y coordinate
-         ;MOV    r8, 0x14                ; generic X coordinate
-         ;MOV    r6, 0xE0                ; color
-         ;CALL   draw_dot                ; draw red pixel
-         ;MOV    r8,0x01                 ; starting x coordinate
-         ;MOV    r7,0x12                 ; start y coordinate
-         ;MOV    r9,0x26                 ; ending x coordinate
-         ;CALL   draw_horizontal_line
+		CALL   draw_background
 
-         ;MOV    r8,0x08                 ; starting x coordinate
-         ;MOV    r7,0x04                 ; start y coordinate
-         ;MOV    r9,0x17                 ; ending x coordinate
-         ;CALL   draw_vertical_line
-  
 		CALL	draw_maze_structure
 		CALL	draw_maze_pattern
 
-main:   AND    r0, r0                  ; nop
+main:   CALL	move_block
 
-		CALL	move_block
-	
-        BRN    main                    ; continuous loop 
+        BRN		main					; continuous loop 
 
 ;--------------------------------------------------------------------
 
@@ -142,7 +127,7 @@ draw_maze_structure:
 			MOV r8,0x03   ; starting x coordinate
 			MOV r7,0x03   ; starting y coordinate
 
-structure_loop:
+	structure_loop:
 			CALL draw_dot
 			ADD r8, 0x02	;increment x location of dot drawing
 			CMP r8, 0x26	;until it reaches the right edge of maze
@@ -156,15 +141,15 @@ structure_loop:
 			RET
 
 draw_pattern:
-			MOV r13, 0x00	;initialize data counter
+			MOV r12, 0x00	;initialize data counter
 
 	maze_pattern_loop:
-			ASR r12			;move lsb into carry
+			ASR r13			;move lsb into carry
 			CALL black_or_white	;assign color based on carry bit
 			CALL draw_dot		;draw dot
 
-			ADD r13, 0x01	;increment counter
-			CMP r13, 0x07	;run for 8 times till end of data at r12 (pattern register)
+			ADD r12, 0x01	;increment counter
+			CMP r12, 0x07	;run for 8 times till end of data at r12 (pattern register)
 			BRCS RET		;finish draw_pattern once all 8 data points are drawn, also leaves drawing location alone (doesn't change it back)
 
 			ADD r7, 0x02	;increment y location
@@ -252,7 +237,7 @@ draw_maze_pattern:
 			MOV r8,0x02   ; starting x coordinate
 			MOV r7,0x03   ; starting y coordinate
 			
-			;blocks of code grouped into every 8 columns
+			;blocks of code grouped into every 4 columns
 			MOV r13, 0x46
 			CALL draw_pattern
 			MOV r13, 0xDE
