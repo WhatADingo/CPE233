@@ -57,7 +57,7 @@ C5:  Raw line from source code.
 (0041)                            || 		;CALL	draw_maze
 (0042)  CS-0x011  0x081D9         || 		CALL	draw_block
 (0043)                            || 
-(0044)  CS-0x012  0x08209  0x012  || main:   CALL	move_block
+(0044)  CS-0x012  0x08211  0x012  || main:   CALL	move_block
 (0045)                            || 	
 (0046)  CS-0x013  0x08090         ||         BRN    main                    ; continuous loop 
 (0047)                            || 
@@ -177,116 +177,119 @@ C5:  Raw line from source code.
 (0161)                            || 
 (0162)  CS-0x03B  0x366F8  0x03B  || draw_block: MOV r6,M_YELLOW
 (0163)                            || 
-(0164)  CS-0x03C  0x36A02         || 			MOV r10,0x02
+(0164)  CS-0x03C  0x36A01         || 			MOV r10,0x01
 (0165)  CS-0x03D  0x04751         || 			MOV r7, r10
-(0166)  CS-0x03E  0x36B03         || 			MOV r11,0x03
+(0166)  CS-0x03E  0x36B01         || 			MOV r11,0x01
 (0167)  CS-0x03F  0x04859         || 			MOV r8, r11
 (0168)  CS-0x040  0x08151         || 			CALL draw_dot
-(0169)                            || 
-(0170)  CS-0x041  0x32F9A  0x041  || move_block: IN r15,button
-(0171)                            || 	;		MOV r16,For_Count
-(0172)                            || 	;TimeDelay:	SUB r16,0x01
-(0173)                            || 	;			BRNE TimeDelay
-(0174)  CS-0x042  0x12F00         || 			ASR r15
-(0175)  CS-0x043  0x0A250         || 			BRCS move_right
-(0176)  CS-0x044  0x12F00         || 			ASR r15
-(0177)  CS-0x045  0x0A2A8         || 			BRCS move_left
-(0178)  CS-0x046  0x12F00         || 			ASR r15
-(0179)  CS-0x047  0x0A300         || 			BRCS move_up
-(0180)  CS-0x048  0x12F00         || 			ASR r15
-(0181)  CS-0x049  0x0A358         || 			BRCS move_down
-(0182)                            || 
-(0183)                     0x04A  || move_right:
-(0184)                            || 		
-(0185)                            || 		;maze boundary check
-(0186)  CS-0x04A  0x30825         || 		CMP	   r8, 0x25
-(0187)                            || 		BREQ	RET
+(0169)  CS-0x041  0x18002         || 			RET
+(0170)                            || 
+(0171)  CS-0x042  0x32F9A  0x042  || move_block: IN r15,button
+(0172)                            || 	;		MOV r16,For_Count
+(0173)                            || 	;TimeDelay:	SUB r16,0x01
+(0174)                            || 	;			BRNE TimeDelay
+(0175)  CS-0x043  0x12F00         || 			ASR r15
+(0176)  CS-0x044  0x0A260         || 			BRCS move_right
+(0177)  CS-0x045  0x12F00         || 			ASR r15
+(0178)  CS-0x046  0x0A2B8         || 			BRCS move_left
+(0179)  CS-0x047  0x12F00         || 			ASR r15
+(0180)  CS-0x048  0x0A310         || 			BRCS move_up
+(0181)  CS-0x049  0x12F00         || 			ASR r15
+(0182)  CS-0x04A  0x0A368         || 			BRCS move_down
+(0183)                            || 
+(0184)  CS-0x04B  0x18002         || 			RET
+(0185)                            || 
+(0186)                     0x04C  || move_right:
+(0187)                            || 		
+(0188)                            || 		;maze boundary check
+(0189)  CS-0x04C  0x30826         || 		CMP	   r8, 0x26
+(0190)                            || 		BREQ	RET
             syntax error
 
-(0188)                            || 		
-(0189)                            || 		;draw pixel at new location
-(0190)  CS-0x04B  0x28B01         || 		ADD	   r11, 0x01
-(0191)  CS-0x04C  0x04751         || 		MOV    r7, r10
-(0192)  CS-0x04D  0x04859         || 		MOV    r8, r11
-(0193)  CS-0x04E  0x366F8         || 		MOV    r6, M_YELLOW
-(0194)  CS-0x04F  0x08151         || 		CALL   draw_dot
-(0195)                            || 
-(0196)                            || 		;draw background at previous location
-(0197)  CS-0x050  0x04751         || 		MOV    r7, r10
-(0198)  CS-0x051  0x04859         || 		MOV    r8, r11
-(0199)  CS-0x052  0x366FF         || 		MOV    r6, BG_COLOR
-(0200)  CS-0x053  0x08151         || 		CALL   draw_dot
-(0201)                            || 
-(0202)  CS-0x054  0x18002         || 		RET
-(0203)                            || 
-(0204)                     0x055  || move_left:
-(0205)                            || 		
-(0206)                            || 		;maze boundary check
-(0207)  CS-0x055  0x30801         || 		CMP	   r8, 0x01
-(0208)                            || 		BREQ	RET
+(0191)                            || 		
+(0192)                            || 		;draw pixel at new location
+(0193)  CS-0x04D  0x28B01         || 		ADD	   r11, 0x01
+(0194)  CS-0x04E  0x04751         || 		MOV    r7, r10
+(0195)  CS-0x04F  0x04859         || 		MOV    r8, r11
+(0196)  CS-0x050  0x366F8         || 		MOV    r6, M_YELLOW
+(0197)  CS-0x051  0x08151         || 		CALL   draw_dot
+(0198)                            || 
+(0199)                            || 		;draw background at previous location
+(0200)  CS-0x052  0x04751         || 		MOV    r7, r10
+(0201)  CS-0x053  0x04859         || 		MOV    r8, r11
+(0202)  CS-0x054  0x366FF         || 		MOV    r6, BG_COLOR
+(0203)  CS-0x055  0x08151         || 		CALL   draw_dot
+(0204)                            || 
+(0205)  CS-0x056  0x18002         || 		RET
+(0206)                            || 
+(0207)                     0x057  || move_left:
+(0208)                            || 		
+(0209)                            || 		;maze boundary check
+(0210)  CS-0x057  0x30801         || 		CMP	   r8, 0x01
+(0211)                            || 		BREQ	RET
             syntax error
 
-(0209)                            || 		
-(0210)                            || 		;draw pixel at new location
-(0211)  CS-0x056  0x2CB01         || 		SUB	   r11, 0x01
-(0212)  CS-0x057  0x04751         || 		MOV    r7, r10
-(0213)  CS-0x058  0x04859         || 		MOV    r8, r11
-(0214)  CS-0x059  0x366F8         || 		MOV    r6, M_YELLOW
-(0215)  CS-0x05A  0x08151         || 		CALL   draw_dot
-(0216)                            || 
-(0217)                            || 		;draw background at previous location
-(0218)  CS-0x05B  0x04751         || 		MOV    r7, r10
-(0219)  CS-0x05C  0x04859         || 		MOV    r8, r11
-(0220)  CS-0x05D  0x366FF         || 		MOV    r6, BG_COLOR
-(0221)  CS-0x05E  0x08151         || 		CALL   draw_dot
-(0222)                            || 		
-(0223)  CS-0x05F  0x18002         || 		RET
-(0224)                            || 
-(0225)                     0x060  || move_up:
-(0226)                            || 		
-(0227)                            || 		;maze boundary check
-(0228)  CS-0x060  0x30701         || 		CMP	   r7, 0x01
-(0229)                            || 		BREQ	RET
+(0212)                            || 		
+(0213)                            || 		;draw pixel at new location
+(0214)  CS-0x058  0x2CB01         || 		SUB	   r11, 0x01
+(0215)  CS-0x059  0x04751         || 		MOV    r7, r10
+(0216)  CS-0x05A  0x04859         || 		MOV    r8, r11
+(0217)  CS-0x05B  0x366F8         || 		MOV    r6, M_YELLOW
+(0218)  CS-0x05C  0x08151         || 		CALL   draw_dot
+(0219)                            || 
+(0220)                            || 		;draw background at previous location
+(0221)  CS-0x05D  0x04751         || 		MOV    r7, r10
+(0222)  CS-0x05E  0x04859         || 		MOV    r8, r11
+(0223)  CS-0x05F  0x366FF         || 		MOV    r6, BG_COLOR
+(0224)  CS-0x060  0x08151         || 		CALL   draw_dot
+(0225)                            || 		
+(0226)  CS-0x061  0x18002         || 		RET
+(0227)                            || 
+(0228)                     0x062  || move_up:
+(0229)                            || 		
+(0230)                            || 		;maze boundary check
+(0231)  CS-0x062  0x30701         || 		CMP	   r7, 0x01
+(0232)                            || 		BREQ	RET
             syntax error
 
-(0230)                            || 		
-(0231)                            || 		;draw pixel at new location
-(0232)  CS-0x061  0x28A01         || 		ADD	   r10, 0x01
-(0233)  CS-0x062  0x04751         || 		MOV    r7, r10
-(0234)  CS-0x063  0x04859         || 		MOV    r8, r11
-(0235)  CS-0x064  0x366F8         || 		MOV    r6, M_YELLOW
-(0236)  CS-0x065  0x08151         || 		CALL   draw_dot
-(0237)                            || 
-(0238)                            || 		;draw background at previous location
-(0239)  CS-0x066  0x04751         || 		MOV    r7, r10
-(0240)  CS-0x067  0x04859         || 		MOV    r8, r11
-(0241)  CS-0x068  0x366FF         || 		MOV    r6, BG_COLOR
-(0242)  CS-0x069  0x08151         || 		CALL   draw_dot
-(0243)                            || 		
-(0244)  CS-0x06A  0x18002         || 		RET
-(0245)                            || 
-(0246)                     0x06B  || move_down:
-(0247)                            || 		
-(0248)                            || 		;maze boundary check
-(0249)  CS-0x06B  0x3071B         || 		CMP	   r7, 0x1b
-(0250)                            || 		BREQ	RET
+(0233)                            || 		
+(0234)                            || 		;draw pixel at new location
+(0235)  CS-0x063  0x28A01         || 		ADD	   r10, 0x01
+(0236)  CS-0x064  0x04751         || 		MOV    r7, r10
+(0237)  CS-0x065  0x04859         || 		MOV    r8, r11
+(0238)  CS-0x066  0x366F8         || 		MOV    r6, M_YELLOW
+(0239)  CS-0x067  0x08151         || 		CALL   draw_dot
+(0240)                            || 
+(0241)                            || 		;draw background at previous location
+(0242)  CS-0x068  0x04751         || 		MOV    r7, r10
+(0243)  CS-0x069  0x04859         || 		MOV    r8, r11
+(0244)  CS-0x06A  0x366FF         || 		MOV    r6, BG_COLOR
+(0245)  CS-0x06B  0x08151         || 		CALL   draw_dot
+(0246)                            || 		
+(0247)  CS-0x06C  0x18002         || 		RET
+(0248)                            || 
+(0249)                     0x06D  || move_down:
+(0250)                            || 		
+(0251)                            || 		;maze boundary check
+(0252)  CS-0x06D  0x3071B         || 		CMP	   r7, 0x1b
+(0253)                            || 		BREQ	RET
             syntax error
 
-(0251)                            || 		
-(0252)                            || 		;draw pixel at new location
-(0253)  CS-0x06C  0x2CA01         || 		SUB	   r10, 0x01
-(0254)  CS-0x06D  0x04751         || 		MOV    r7, r10
-(0255)  CS-0x06E  0x04859         || 		MOV    r8, r11
-(0256)  CS-0x06F  0x366F8         ||         MOV    r6, M_YELLOW
-(0257)  CS-0x070  0x08151         || 		CALL   draw_dot
-(0258)                            || 
-(0259)                            || 		;draw background at previous location
-(0260)  CS-0x071  0x04751         || 		MOV    r7, r10
-(0261)  CS-0x072  0x04859         || 		MOV    r8, r11
-(0262)  CS-0x073  0x366FF         || 		MOV    r6, BG_COLOR
-(0263)  CS-0x074  0x08151         || 		CALL   draw_dot
-(0264)                            || 		
-(0265)  CS-0x075  0x18002         || 		RET
+(0254)                            || 		
+(0255)                            || 		;draw pixel at new location
+(0256)  CS-0x06E  0x2CA01         || 		SUB	   r10, 0x01
+(0257)  CS-0x06F  0x04751         || 		MOV    r7, r10
+(0258)  CS-0x070  0x04859         || 		MOV    r8, r11
+(0259)  CS-0x071  0x366F8         ||         MOV    r6, M_YELLOW
+(0260)  CS-0x072  0x08151         || 		CALL   draw_dot
+(0261)                            || 
+(0262)                            || 		;draw background at previous location
+(0263)  CS-0x073  0x04751         || 		MOV    r7, r10
+(0264)  CS-0x074  0x04859         || 		MOV    r8, r11
+(0265)  CS-0x075  0x366FF         || 		MOV    r6, BG_COLOR
+(0266)  CS-0x076  0x08151         || 		CALL   draw_dot
+(0267)                            || 		
+(0268)  CS-0x077  0x18002         || 		RET
 
 
 
@@ -310,19 +313,19 @@ DD_ADD80       0x039   (0158)  ||  0147
 DD_OUT         0x032   (0149)  ||  0159 
 DRAW_BACKGROUND 0x020   (0111)  ||  0026 
 DRAW_BLOCK     0x03B   (0162)  ||  0042 
-DRAW_DOT       0x02A   (0137)  ||  0068 0094 0168 0194 0200 0215 0221 0236 0242 0257 
-                               ||  0263 
+DRAW_DOT       0x02A   (0137)  ||  0068 0094 0168 0197 0203 0218 0224 0239 0245 0260 
+                               ||  0266 
 DRAW_HORIZ1    0x015   (0067)  ||  0071 
 DRAW_HORIZONTAL_LINE 0x014   (0064)  ||  0118 
 DRAW_VERT1     0x01B   (0093)  ||  0097 
 DRAW_VERTICAL_LINE 0x01A   (0090)  ||  
 INIT           0x010   (0025)  ||  
 MAIN           0x012   (0044)  ||  0046 
-MOVE_BLOCK     0x041   (0170)  ||  0044 
-MOVE_DOWN      0x06B   (0246)  ||  0181 
-MOVE_LEFT      0x055   (0204)  ||  0177 
-MOVE_RIGHT     0x04A   (0183)  ||  0175 
-MOVE_UP        0x060   (0225)  ||  0179 
+MOVE_BLOCK     0x042   (0171)  ||  0044 
+MOVE_DOWN      0x06D   (0249)  ||  0182 
+MOVE_LEFT      0x057   (0207)  ||  0178 
+MOVE_RIGHT     0x04C   (0186)  ||  0176 
+MOVE_UP        0x062   (0228)  ||  0180 
 START          0x022   (0114)  ||  0121 
 T1             0x030   (0146)  ||  0156 
 
@@ -334,15 +337,15 @@ T1             0x030   (0146)  ||  0156
 
 -- Directives: .EQU
 ------------------------------------------------------------ 
-BG_COLOR       0x0FF   (0010)  ||  0112 0199 0220 0241 0262 
-BUTTON         0x09A   (0018)  ||  0170 
+BG_COLOR       0x0FF   (0010)  ||  0112 0202 0223 0244 0265 
+BUTTON         0x09A   (0018)  ||  0171 
 FOR_COUNT      0x0AA   (0019)  ||  
 LEDS           0x040   (0008)  ||  
 M_BLACK        0x000   (0015)  ||  
 M_BLUE         0x013   (0014)  ||  
 M_BROWN        0x090   (0016)  ||  
 M_RED          0x0E0   (0013)  ||  
-M_YELLOW       0x0F8   (0012)  ||  0162 0193 0214 0235 0256 
+M_YELLOW       0x0F8   (0012)  ||  0162 0196 0217 0238 0259 
 SSEG           0x081   (0007)  ||  
 VGA_COLOR      0x092   (0006)  ||  0151 
 VGA_HADD       0x090   (0004)  ||  0150 

@@ -161,11 +161,12 @@ dd_add80:  OR    r5,0x80       ; set bit if needed
 
 draw_block: MOV r6,M_YELLOW
 
-			MOV r10,0x02
+			MOV r10,0x01
 			MOV r7, r10
-			MOV r11,0x03
+			MOV r11,0x01
 			MOV r8, r11
 			CALL draw_dot
+			RET
 
 move_block: IN r15,button
 	;		MOV r16,For_Count
@@ -180,10 +181,12 @@ move_block: IN r15,button
 			ASR r15
 			BRCS move_down
 
+			RET
+
 move_right:
 		
 		;maze boundary check
-		CMP	   r8, 0x25
+		CMP	   r8, 0x26
 		BREQ	RET
 		
 		;draw pixel at new location
