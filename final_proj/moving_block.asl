@@ -216,13 +216,13 @@ C5:  Raw line from source code.
 (0200)  CS-0x055  0x0A3E8         || 			BRCS move_down
 (0201)                     0x056  || 			move_down_end:
 (0202)                            || 
-(0203)  CS-0x056  0x370AA         || 			MOV r16, 0xAA
+(0203)  CS-0x056  0x370FF         || 			MOV r16, 0xFF
 (0204)  CS-0x057  0x2D001  0x057  || 			outside_for0: SUB r16, 0x01
 (0205)                            || 						  
-(0206)  CS-0x058  0x371CA         || 						  MOV r17, 0xCA
+(0206)  CS-0x058  0x371FF         || 						  MOV r17, 0xFF
 (0207)  CS-0x059  0x2D101  0x059  || 			middle_for0:  SUB r17, 0x01
 (0208)                            || 					
-(0209)  CS-0x05A  0x372B4         || 						  MOV r18, 0xB4
+(0209)  CS-0x05A  0x3720F         || 						  MOV r18, 0x0F
 (0210)  CS-0x05B  0x2D201  0x05B  || 			inside_for0:  SUB r18, 0x01
 (0211)  CS-0x05C  0x082DB         || 						  BRNE inside_for0
 (0212)                            || 			

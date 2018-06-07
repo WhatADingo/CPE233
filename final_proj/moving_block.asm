@@ -200,13 +200,13 @@ move_block: IN r15,button
 			BRCS move_down
 			move_down_end:
 
-			MOV r16, 0xAA
+			MOV r16, 0xFF
 			outside_for0: SUB r16, 0x01
 						  
-						  MOV r17, 0xCA
+						  MOV r17, 0xFF
 			middle_for0:  SUB r17, 0x01
 					
-						  MOV r18, 0xB4
+						  MOV r18, 0x0F
 			inside_for0:  SUB r18, 0x01
 						  BRNE inside_for0
 			
