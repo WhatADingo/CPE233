@@ -41,7 +41,8 @@ init:
 		;CALL	draw_maze
 		CALL	draw_block
 
-main:   CALL	move_block
+main:   
+		CALL	move_block
 	
         BRN    main                    ; continuous loop 
 
@@ -163,23 +164,35 @@ draw_block: MOV r6,M_YELLOW
 
 			MOV r10,0x01
 			MOV r7, r10
-			MOV r11,0x01
+			MOV r11,0x00
 			MOV r8, r11
 			CALL draw_dot
 			RET
 
 move_block: IN r15,button
-	;		MOV r16,For_Count
-	;TimeDelay:	SUB r16,0x01
-	;			BRNE TimeDelay
+
 			ASR r15
 			BRCS move_right
+			move_right_end:
 			ASR r15
 			BRCS move_left
+			move_left_end:
 			ASR r15
 			BRCS move_up
+			move_up_end:
 			ASR r15
 			BRCS move_down
+			move_down_end:
+
+			MOV r16, For_Count
+	delay0:		SUB r16, 0x01
+				MOV r17, For_Count
+		delay1: 	SUB r17, 0x01
+					MOV r18, For_Count
+			delay2: 	SUB r18, 0x01
+						BRNE delay2
+					BRNE delay1
+				BRNE delay0
 
 			RET
 
@@ -187,8 +200,10 @@ move_right:
 		
 		;maze boundary check
 		CMP	   r8, 0x26
-		BREQ	RET
+		BREQ	move_right_end
 		
+		CALL	draw_at_prev_loc
+
 		;draw pixel at new location
 		ADD	   r11, 0x01
 		MOV    r7, r10
@@ -196,20 +211,16 @@ move_right:
 		MOV    r6, M_YELLOW
 		CALL   draw_dot
 
-		;draw background at previous location
-		MOV    r7, r10
-		MOV    r8, r11
-		MOV    r6, BG_COLOR
-		CALL   draw_dot
-
-		RET
+		BRN move_right_end
 
 move_left:
 		
 		;maze boundary check
 		CMP	   r8, 0x01
-		BREQ	RET
+		BREQ	move_left_end
 		
+		CALL	draw_at_prev_loc
+
 		;draw pixel at new location
 		SUB	   r11, 0x01
 		MOV    r7, r10
@@ -217,20 +228,16 @@ move_left:
 		MOV    r6, M_YELLOW
 		CALL   draw_dot
 
-		;draw background at previous location
-		MOV    r7, r10
-		MOV    r8, r11
-		MOV    r6, BG_COLOR
-		CALL   draw_dot
-		
-		RET
+		BRN move_left_end
 
 move_up:
 		
 		;maze boundary check
 		CMP	   r7, 0x01
-		BREQ	RET
+		BREQ	move_up_end
 		
+		CALL	draw_at_prev_loc
+
 		;draw pixel at new location
 		ADD	   r10, 0x01
 		MOV    r7, r10
@@ -238,20 +245,16 @@ move_up:
 		MOV    r6, M_YELLOW
 		CALL   draw_dot
 
-		;draw background at previous location
-		MOV    r7, r10
-		MOV    r8, r11
-		MOV    r6, BG_COLOR
-		CALL   draw_dot
-		
-		RET
+		BRN move_up_end
 
 move_down:
 		
 		;maze boundary check
 		CMP	   r7, 0x1b
-		BREQ	RET
+		BREQ	move_down_end
 		
+		CALL	draw_at_prev_loc
+
 		;draw pixel at new location
 		SUB	   r10, 0x01
 		MOV    r7, r10
@@ -259,10 +262,11 @@ move_down:
         MOV    r6, M_YELLOW
 		CALL   draw_dot
 
-		;draw background at previous location
+		BRN move_down_end
+
+draw_at_prev_loc:
 		MOV    r7, r10
 		MOV    r8, r11
 		MOV    r6, BG_COLOR
 		CALL   draw_dot
-		
 		RET
