@@ -41,6 +41,22 @@ init:
 		;CALL	draw_maze
 		CALL	draw_block
 
+		MOV		r15,0x11
+		OUT		r15,LEDS
+
+		;maze boundary check
+		CMP	   r8, 0x26
+		BREQ	move_right_end
+		
+		CALL	draw_at_prev_loc
+
+		;draw pixel at new location
+		ADD	   r11, 0x01
+		MOV    r7, r10
+		MOV    r8, r11
+		MOV    r6, M_YELLOW
+		CALL   draw_dot
+
 main:   CALL	move_block
 	
         BRN    main                    ; continuous loop 
@@ -161,25 +177,26 @@ dd_add80:  OR    r5,0x80       ; set bit if needed
 
 draw_block: MOV r6,M_YELLOW
 
-			MOV r10,0x03
+			MOV r10,0x01
 			MOV r7, r10
-			MOV r11,0x02
+			MOV r11,0x00
 			MOV r8, r11
 			CALL draw_dot
 			RET
 
 move_block: IN r15,button
+			OUT r15, LEDS
 
-			ASR r15
+			LSR r15
 			BRCS move_right
 			move_right_end:
-			ASR r15
+			LSR r15
 			BRCS move_left
 			move_left_end:
-			ASR r15
+			LSR r15
 			BRCS move_up
 			move_up_end:
-			ASR r15
+			LSR r15
 			BRCS move_down
 			move_down_end:
 
@@ -187,9 +204,6 @@ move_block: IN r15,button
 	delay0:		SUB r16, 0x01
 				MOV r17, For_Count
 		delay1: 	SUB r17, 0x01
-					MOV r18, For_Count
-			delay2: 	SUB r18, 0x01
-						BRNE delay2
 					BRNE delay1
 				BRNE delay0
 
@@ -201,7 +215,8 @@ move_right:
 		CMP	   r8, 0x26
 		BREQ	move_right_end
 		
-		;CALL	draw_at_prev_loc
+		OUT		0xFF, LEDS
+		CALL	draw_at_prev_loc
 
 		;draw pixel at new location
 		ADD	   r11, 0x01
@@ -217,6 +232,8 @@ move_left:
 		;maze boundary check
 		CMP	   r8, 0x01
 		BREQ	move_left_end
+
+		OUT		0xFF, LEDS
 		
 		;CALL	draw_at_prev_loc
 
@@ -235,6 +252,7 @@ move_up:
 		CMP	   r7, 0x01
 		BREQ	move_up_end
 		
+		OUT		0xFF, LEDS
 		;CALL	draw_at_prev_loc
 
 		;draw pixel at new location
@@ -251,6 +269,8 @@ move_down:
 		;maze boundary check
 		CMP	   r7, 0x1b
 		BREQ	move_down_end
+
+		OUT		0xFF, LEDS
 		
 		;CALL	draw_at_prev_loc
 
