@@ -9,7 +9,7 @@
 
 .EQU BG_COLOR       = 0xFF             ; Background:  white
 
-.EQU M_YELLOW		= 0xF8
+.EQU M_YELLOW		= 0xE0	;0xF8
 .EQU M_RED			= 0xE0
 .EQU M_BLUE			= 0x13
 .EQU M_BLACK		= 0x00
@@ -38,16 +38,10 @@ init:
          ;MOV    r9,0x17                 ; ending x coordinate
          ;CALL   draw_vertical_line
   
-		CALL	draw_maze
-		CALL 	draw_block
+		;CALL	draw_maze
+		CALL	draw_block
 
-<<<<<<< HEAD
-main:   
-=======
-main:   AND    r0, r0                  ; nop
-
->>>>>>> 176a26e9e81a6f15fae1c8991da972c3ac029bc7
-		CALL	move_block
+main:   CALL	move_block
 	
         BRN    main                    ; continuous loop 
 
@@ -164,660 +158,18 @@ dd_add40:  OR    r5,0x40       ; set bit if needed
 dd_add80:  OR    r5,0x80       ; set bit if needed
            BRN   dd_out
 ; --------------------------------------------------------------------
-draw_maze: 
-		   MOV r6,M_BLACK
-		   
-		   MOV r8,0x00   ; starting x coordinate
-		   MOV r7,0x00   ; y coordinate
-		   MOV r9,0x26   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-           MOV r8,0x00   ; x coordinate
-		   MOV r7,0x02	 ; starting y coordinate
-		   MOV r9,0x1C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-           MOV r8,0x01   ; x coordinate
-		   MOV r7,0x02	 ; starting y coordinate
-		   MOV r9,0x1C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x00   ; starting x coordinate
-		   MOV r7,0x1C   ; y coordinate
-		   MOV r9,0x26   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x26   ; x coordinate
-		   MOV r7,0x00	 ; starting y coordinate
-		   MOV r9,0x1A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x00  ; starting x coordinate
-		   MOV r7,0x02   ; y coordinate
-		   MOV r9,0x02   ; ending x coordinate
-		   CALL draw_horizontal_line
- 
-		   MOV r8,0x00   ; starting x coordinate
-		   MOV r7,0x06   ; y coordinate
-		   MOV r9,0x04   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x00   ; starting x coordinate
-		   MOV r7,0x08   ; y coordinate
-		   MOV r9,0x08   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x00   ; starting x coordinate
-		   MOV r7,0x0E   ; y coordinate
-		   MOV r9,0x02   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x00   ; starting x coordinate
-		   MOV r7,0x16   ; y coordinate
-		   MOV r9,0x04   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x02  ; x coordinate
-		   MOV r7,0x02	 ; starting y coordinate
-		   MOV r9,0x04	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x02  ; x coordinate
-		   MOV r7,0x08	 ; starting y coordinate
-		   MOV r9,0x0A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x02  ; x coordinate
-		   MOV r7,0x0C	 ; starting y coordinate
-		   MOV r9,0x10	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x02  ; x coordinate
-		   MOV r7,0x12	 ; starting y coordinate
-		   MOV r9,0x14	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x02  ; x coordinate
-		   MOV r7,0x16	 ; starting y coordinate
-		   MOV r9,0x18	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x02  ; x coordinate
-		   MOV r7,0x1A	 ; starting y coordinate
-		   MOV r9,0x1C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x02   ; starting x coordinate
-		   MOV r7,0x14   ; y coordinate
-		   MOV r9,0x06   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x04  ; x coordinate
-		   MOV r7,0x00	 ; starting y coordinate
-		   MOV r9,0x04	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x04  ; x coordinate
-		   MOV r7,0x08	 ; starting y coordinate
-		   MOV r9,0x0C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x04  ; x coordinate
-		   MOV r7,0x10	 ; starting y coordinate
-		   MOV r9,0x14	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x04  ; x coordinate
-		   MOV r7,0x18	 ; starting y coordinate
-		   MOV r9,0x1A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x04   ; starting x coordinate
-		   MOV r7,0x0E   ; y coordinate
-		   MOV r9,0x06   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x04   ; starting x coordinate
-		   MOV r7,0x0A   ; y coordinate
-		   MOV r9,0x06   ; ending x coordinate
-		   CALL draw_horizontal_line
-		
-		   MOV r8,0x04   ; starting x coordinate
-		   MOV r7,0x1A   ; y coordinate
-		   MOV r9,0x06   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x06  ; x coordinate
-		   MOV r7,0x02	 ; starting y coordinate
-		   MOV r9,0x04	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x06  ; x coordinate
-		   MOV r7,0x06	 ; starting y coordinate
-		   MOV r9,0x08	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x06  ; x coordinate
-		   MOV r7,0x0A	 ; starting y coordinate
-		   MOV r9,0x0C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x06  ; x coordinate
-		   MOV r7,0x0E	 ; starting y coordinate
-		   MOV r9,0x14	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x06  ; x coordinate
-		   MOV r7,0x16	 ; starting y coordinate
-		   MOV r9,0x1A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x06   ; starting x coordinate
-		   MOV r7,0x02   ; y coordinate
-		   MOV r9,0x0C   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x06   ; starting x coordinate
-		   MOV r7,0x04   ; y coordinate
-		   MOV r9,0x0A   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x06   ; starting x coordinate
-		   MOV r7,0x12   ; y coordinate
-		   MOV r9,0x08   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x06   ; starting x coordinate
-		   MOV r7,0x18   ; y coordinate
-		   MOV r9,0x08   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x08  ; x coordinate
-		   MOV r7,0x06	 ; starting y coordinate
-		   MOV r9,0x0A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x08  ; x coordinate
-		   MOV r7,0x0C	 ; starting y coordinate
-		   MOV r9,0x0E	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x08  ; x coordinate
-		   MOV r7,0x12	 ; starting y coordinate
-		   MOV r9,0x16	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x08  ; x coordinate
-		   MOV r7,0x18	 ; starting y coordinate
-		   MOV r9,0x1C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x08   ; starting x coordinate
-		   MOV r7,0x06   ; y coordinate
-		   MOV r9,0x0A   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x08   ; starting x coordinate
-		   MOV r7,0x0C   ; y coordinate
-		   MOV r9,0x0A   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x08   ; starting x coordinate
-		   MOV r7,0x10   ; y coordinate
-		   MOV r9,0x0E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x08   ; starting x coordinate
-		   MOV r7,0x14   ; y coordinate
-		   MOV r9,0x0C   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0A  ; x coordinate
-		   MOV r7,0x06	 ; starting y coordinate
-		   MOV r9,0x08	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0A  ; x coordinate
-		   MOV r7,0x0A	 ; starting y coordinate
-		   MOV r9,0x0C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0A  ; x coordinate
-		   MOV r7,0x0E	 ; starting y coordinate
-		   MOV r9,0x12	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0A  ; x coordinate
-		   MOV r7,0x14	 ; starting y coordinate
-		   MOV r9,0x1A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0A   ; starting x coordinate
-		   MOV r7,0x0A   ; y coordinate
-		   MOV r9,0x0E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0A   ; starting x coordinate
-		   MOV r7,0x0E   ; y coordinate
-		   MOV r9,0x0C   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0A   ; starting x coordinate
-		   MOV r7,0x16   ; y coordinate
-		   MOV r9,0x0C   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0C  ; x coordinate
-		   MOV r7,0x00	 ; starting y coordinate
-		   MOV r9,0x02	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0C  ; x coordinate
-		   MOV r7,0x04	 ; starting y coordinate
-		   MOV r9,0x0A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0C  ; x coordinate
-		   MOV r7,0x12	 ; starting y coordinate
-		   MOV r9,0x14	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0C  ; x coordinate
-		   MOV r7,0x16	 ; starting y coordinate
-		   MOV r9,0x18	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0C   ; starting x coordinate
-		   MOV r7,0x04   ; y coordinate
-		   MOV r9,0x18   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0C   ; starting x coordinate
-		   MOV r7,0x0C   ; y coordinate
-		   MOV r9,0x0E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0C   ; starting x coordinate
-		   MOV r7,0x18   ; y coordinate
-		   MOV r9,0x10   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0E  ; x coordinate
-		   MOV r7,0x00	 ; starting y coordinate
-		   MOV r9,0x02	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0E  ; x coordinate
-		   MOV r7,0x04	 ; starting y coordinate
-		   MOV r9,0x06	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0E  ; x coordinate
-		   MOV r7,0x08	 ; starting y coordinate
-		   MOV r9,0x0E	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0E  ; x coordinate
-		   MOV r7,0x10	 ; starting y coordinate
-		   MOV r9,0x16	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0E  ; x coordinate
-		   MOV r7,0x18	 ; starting y coordinate
-		   MOV r9,0x1C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x0E   ; starting x coordinate
-		   MOV r7,0x02   ; y coordinate
-		   MOV r9,0x10   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0E   ; starting x coordinate
-		   MOV r7,0x08   ; y coordinate
-		   MOV r9,0x12   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0E   ; starting x coordinate
-		   MOV r7,0x0E   ; y coordinate
-		   MOV r9,0x12   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x0E   ; starting x coordinate
-		   MOV r7,0x16   ; y coordinate
-		   MOV r9,0x12   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x10  ; x coordinate
-		   MOV r7,0x06	 ; starting y coordinate
-		   MOV r9,0x0C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x10  ; x coordinate
-		   MOV r7,0x10	 ; starting y coordinate
-		   MOV r9,0x16	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x10   ; starting x coordinate
-		   MOV r7,0x10   ; y coordinate
-		   MOV r9,0x16   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x10   ; starting x coordinate
-		   MOV r7,0x12   ; y coordinate
-		   MOV r9,0x16   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x10   ; starting x coordinate
-		   MOV r7,0x1A   ; y coordinate
-		   MOV r9,0x1E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x12  ; x coordinate
-		   MOV r7,0x00	 ; starting y coordinate
-		   MOV r9,0x02	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x12  ; x coordinate
-		   MOV r7,0x08	 ; starting y coordinate
-		   MOV r9,0x0C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x12  ; x coordinate
-		   MOV r7,0x16	 ; starting y coordinate
-		   MOV r9,0x1A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x12   ; starting x coordinate
-		   MOV r7,0x02   ; y coordinate
-		   MOV r9,0x14   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x12   ; starting x coordinate
-		   MOV r7,0x06   ; y coordinate
-		   MOV r9,0x14  ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x12   ; starting x coordinate
-		   MOV r7,0x14   ; y coordinate
-		   MOV r9,0x16   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x14  ; x coordinate
-		   MOV r7,0x06	 ; starting y coordinate
-		   MOV r9,0x0E	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x14  ; x coordinate
-		   MOV r7,0x12	 ; starting y coordinate
-		   MOV r9,0x14	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x14  ; x coordinate
-		   MOV r7,0x16	 ; starting y coordinate
-		   MOV r9,0x18	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x14  ; x coordinate
-		   MOV r7,0x1A	 ; starting y coordinate
-		   MOV r9,0x1C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x14   ; starting x coordinate
-		   MOV r7,0x08   ; y coordinate
-		   MOV r9,0x18   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x14   ; starting x coordinate
-		   MOV r7,0x0A   ; y coordinate
-		   MOV r9,0x1A   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x14   ; starting x coordinate
-		   MOV r7,0x0E   ; y coordinate
-		   MOV r9,0x16   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x14   ; starting x coordinate
-		   MOV r7,0x16   ; y coordinate
-		   MOV r9,0x18   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x14   ; starting x coordinate
-		   MOV r7,0x18   ; y coordinate
-		   MOV r9,0x20   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x16  ; x coordinate
-		   MOV r7,0x00	 ; starting y coordinate
-		   MOV r9,0x02	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x16  ; x coordinate
-		   MOV r7,0x04	 ; starting y coordinate
-		   MOV r9,0x06	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x16  ; x coordinate
-		   MOV r7,0x0E	 ; starting y coordinate
-		   MOV r9,0x10	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x16   ; starting x coordinate
-		   MOV r7,0x02   ; y coordinate
-		   MOV r9,0x1A   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x16   ; starting x coordinate
-		   MOV r7,0x0C   ; y coordinate
-		   MOV r9,0x1E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x18  ; x coordinate
-		   MOV r7,0x02	 ; starting y coordinate
-		   MOV r9,0x06	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x18  ; x coordinate
-		   MOV r7,0x0A	 ; starting y coordinate
-		   MOV r9,0x0C	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x18  ; x coordinate
-		   MOV r7,0x0E	 ; starting y coordinate
-		   MOV r9,0x16	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x18   ; starting x coordinate
-		   MOV r7,0x06   ; y coordinate
-		   MOV r9,0x1A   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x18   ; starting x coordinate
-		   MOV r7,0x0E   ; y coordinate
-		   MOV r9,0x1A   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x18   ; starting x coordinate
-		   MOV r7,0x10   ; y coordinate
-		   MOV r9,0x26   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x18   ; starting x coordinate
-		   MOV r7,0x12   ; y coordinate
-		   MOV r9,0x1A   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x1A  ; x coordinate
-		   MOV r7,0x02	 ; starting y coordinate
-		   MOV r9,0x04	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x1A  ; x coordinate
-		   MOV r7,0x08	 ; starting y coordinate
-		   MOV r9,0x0A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x1A  ; x coordinate
-		   MOV r7,0x14	 ; starting y coordinate
-		   MOV r9,0x16	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x1C  ; x coordinate
-		   MOV r7,0x04	 ; starting y coordinate
-		   MOV r9,0x0A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x1C  ; x coordinate
-		   MOV r7,0x0E	 ; starting y coordinate
-		   MOV r9,0x10	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x1C  ; x coordinate
-		   MOV r7,0x12	 ; starting y coordinate
-		   MOV r9,0x16	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x1C   ; starting x coordinate
-		   MOV r7,0x02   ; y coordinate
-		   MOV r9,0x1E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x1C   ; starting x coordinate
-		   MOV r7,0x08   ; y coordinate
-		   MOV r9,0x1E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x1C   ; starting x coordinate
-		   MOV r7,0x0A   ; y coordinate
-		   MOV r9,0x1E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x1C   ; starting x coordinate
-		   MOV r7,0x12   ; y coordinate
-		   MOV r9,0x1E   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x1C   ; starting x coordinate
-		   MOV r7,0x14   ; y coordinate
-		   MOV r9,0x24   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x1E  ; x coordinate
-		   MOV r7,0x00	 ; starting y coordinate
-		   MOV r9,0x02	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x1E  ; x coordinate
-		   MOV r7,0x04	 ; starting y coordinate
-		   MOV r9,0x08	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x1E   ; starting x coordinate
-		   MOV r7,0x04   ; y coordinate
-		   MOV r9,0x24   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x1E   ; starting x coordinate
-		   MOV r7,0x0E   ; y coordinate
-		   MOV r9,0x20   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x1E   ; starting x coordinate
-		   MOV r7,0x16   ; y coordinate
-		   MOV r9,0x22   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x20  ; x coordinate
-		   MOV r7,0x06	 ; starting y coordinate
-		   MOV r9,0x10	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x20  ; x coordinate
-		   MOV r7,0x12	 ; starting y coordinate
-		   MOV r9,0x14	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x20  ; x coordinate
-		   MOV r7,0x18	 ; starting y coordinate
-		   MOV r9,0x1A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x20   ; starting x coordinate
-		   MOV r7,0x02   ; y coordinate
-		   MOV r9,0x24   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x20   ; starting x coordinate
-		   MOV r7,0x06   ; y coordinate
-		   MOV r9,0x22   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x20   ; starting x coordinate
-		   MOV r7,0x12   ; y coordinate
-		   MOV r9,0x24   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x20   ; starting x coordinate
-		   MOV r7,0x1A   ; y coordinate
-		   MOV r9,0x22   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x22  ; x coordinate
-		   MOV r7,0x06	 ; starting y coordinate
-		   MOV r9,0x08	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x22  ; x coordinate
-		   MOV r7,0x0A	 ; starting y coordinate
-		   MOV r9,0x0E	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x22  ; x coordinate
-		   MOV r7,0x16	 ; starting y coordinate
-		   MOV r9,0x1A	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x22   ; starting x coordinate
-		   MOV r7,0x0E   ; y coordinate
-		   MOV r9,0x24   ; ending x coordinate
-		   CALL draw_horizontal_line
-
-		   MOV r8,0x24  ; x coordinate
-		   MOV r7,0x02	 ; starting y coordinate
-		   MOV r9,0x0E	 ; ending y coordinate
-		   CALL draw_vertical_line
-
-		   MOV r8,0x24  ; x coordinate
-		   MOV r7,0x14	 ; starting y coordinate
-		   MOV r9,0x1C	 ; ending y coordinate
-		   CALL draw_vertical_line
 
 draw_block: MOV r6,M_YELLOW
-<<<<<<< HEAD
 
-			MOV r10,0x01
+			MOV r10,0x03
 			MOV r7, r10
-			MOV r11,0x00
+			MOV r11,0x02
 			MOV r8, r11
-=======
-			
-			MOV r10,0x02
-			MOV r7,r10
-			MOV r11,0x03
-			MOV r8,r11
->>>>>>> 176a26e9e81a6f15fae1c8991da972c3ac029bc7
 			CALL draw_dot
-			
 			RET
 
 move_block: IN r15,button
-<<<<<<< HEAD
 
-=======
-			;MOV r16,For_Count
-			;TimeDelay:	SUB r16,0x01
-			;			BRNE TimeDelay
->>>>>>> 176a26e9e81a6f15fae1c8991da972c3ac029bc7
 			ASR r15
 			BRCS move_right
 			move_right_end:
@@ -829,7 +181,6 @@ move_block: IN r15,button
 			move_up_end:
 			ASR r15
 			BRCS move_down
-<<<<<<< HEAD
 			move_down_end:
 
 			MOV r16, For_Count
@@ -842,23 +193,15 @@ move_block: IN r15,button
 					BRNE delay1
 				BRNE delay0
 
-=======
-			
->>>>>>> 176a26e9e81a6f15fae1c8991da972c3ac029bc7
 			RET
 
 move_right:
 		
 		;maze boundary check
-<<<<<<< HEAD
 		CMP	   r8, 0x26
 		BREQ	move_right_end
-=======
-		CMP	   r8,0x27
-		BREQ   RET
->>>>>>> 176a26e9e81a6f15fae1c8991da972c3ac029bc7
 		
-		CALL	draw_at_prev_loc
+		;CALL	draw_at_prev_loc
 
 		;draw pixel at new location
 		ADD	   r11, 0x01
@@ -875,7 +218,7 @@ move_left:
 		CMP	   r8, 0x01
 		BREQ	move_left_end
 		
-		CALL	draw_at_prev_loc
+		;CALL	draw_at_prev_loc
 
 		;draw pixel at new location
 		SUB	   r11, 0x01
@@ -892,10 +235,10 @@ move_up:
 		CMP	   r7, 0x01
 		BREQ	move_up_end
 		
-		CALL	draw_at_prev_loc
+		;CALL	draw_at_prev_loc
 
 		;draw pixel at new location
-		ADD	   r10, 0x01
+		SUB	   r10, 0x01
 		MOV    r7, r10
 		MOV    r8, r11
 		MOV    r6, M_YELLOW
@@ -906,18 +249,13 @@ move_up:
 move_down:
 		
 		;maze boundary check
-<<<<<<< HEAD
 		CMP	   r7, 0x1b
 		BREQ	move_down_end
-=======
-		CMP	   r7, 0x1C
-		BREQ	RET
->>>>>>> 176a26e9e81a6f15fae1c8991da972c3ac029bc7
 		
-		CALL	draw_at_prev_loc
+		;CALL	draw_at_prev_loc
 
 		;draw pixel at new location
-		SUB	   r10, 0x01
+		ADD	   r10, 0x01
 		MOV    r7, r10
 		MOV    r8, r11
         MOV    r6, M_YELLOW
@@ -931,4 +269,3 @@ draw_at_prev_loc:
 		MOV    r6, BG_COLOR
 		CALL   draw_dot
 		RET
-

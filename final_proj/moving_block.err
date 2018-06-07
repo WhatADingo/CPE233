@@ -1,3 +1,0 @@
-ERROR # 1:  line# (0046): Multiple definitions for label: MAIN    
-                  "main:   AND    r0, r0                  ; nop"
-
