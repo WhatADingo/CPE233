@@ -200,12 +200,21 @@ move_block: IN r15,button
 			BRCS move_down
 			move_down_end:
 
-			MOV r16, For_Count
-	delay0:		SUB r16, 0x01
-				MOV r17, For_Count
-		delay1: 	SUB r17, 0x01
-					BRNE delay1
-				BRNE delay0
+			MOV r16, 0xAA
+			outside_for0: SUB r16, 0x01
+						  
+						  MOV r17, 0xCA
+			middle_for0:  SUB r17, 0x01
+					
+						  MOV r18, 0xB4
+			inside_for0:  SUB r18, 0x01
+						  BRNE inside_for0
+			
+			OR R17, 0x00
+			BRNE middle_for0
+
+			OR R16, 0x00
+			BRNE outside_for0
 
 			RET
 
@@ -216,6 +225,7 @@ move_right:
 		BREQ	move_right_end
 		
 		OUT		0xFF, LEDS
+
 		CALL	draw_at_prev_loc
 
 		;draw pixel at new location
@@ -235,7 +245,7 @@ move_left:
 
 		OUT		0xFF, LEDS
 		
-		;CALL	draw_at_prev_loc
+		CALL	draw_at_prev_loc
 
 		;draw pixel at new location
 		SUB	   r11, 0x01
@@ -253,7 +263,7 @@ move_up:
 		BREQ	move_up_end
 		
 		OUT		0xFF, LEDS
-		;CALL	draw_at_prev_loc
+		CALL	draw_at_prev_loc
 
 		;draw pixel at new location
 		SUB	   r10, 0x01
@@ -272,7 +282,7 @@ move_down:
 
 		OUT		0xFF, LEDS
 		
-		;CALL	draw_at_prev_loc
+		CALL	draw_at_prev_loc
 
 		;draw pixel at new location
 		ADD	   r10, 0x01
