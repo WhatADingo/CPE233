@@ -10,7 +10,7 @@
 
 .EQU BG_COLOR       = 0xFF             ; Background:  white
 
-.EQU M_YELLOW		= 0xF8
+.EQU M_YELLOW		= 0xE0 ;0xF8
 .EQU M_RED			= 0xE0
 .EQU M_BLUE			= 0x03
 .EQU M_BLACK		= 0x00

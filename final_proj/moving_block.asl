@@ -26,7 +26,7 @@ C5:  Raw line from source code.
 (0010)                            || 
 (0011)                       255  || .EQU BG_COLOR       = 0xFF             ; Background:  white
 (0012)                            || 
-(0013)                       248  || .EQU M_YELLOW		= 0xF8
+(0013)                       224  || .EQU M_YELLOW		= 0xE0 ;0xF8
 (0014)                       224  || .EQU M_RED			= 0xE0
 (0015)                       003  || .EQU M_BLUE			= 0x03
 (0016)                       000  || .EQU M_BLACK		= 0x00
@@ -199,7 +199,7 @@ C5:  Raw line from source code.
 (0183)                            || 
 (0184)                            || ; --------------------------------------------------------------------
 (0185)                            || 
-(0186)  CS-0x053  0x366F8  0x053  || draw_block: MOV r6,M_YELLOW
+(0186)  CS-0x053  0x366E0  0x053  || draw_block: MOV r6,M_YELLOW
 (0187)                            || 
 (0188)  CS-0x054  0x36A01         || 			MOV r10,0x01
 (0189)  CS-0x055  0x04751         || 			MOV r7, r10
@@ -259,7 +259,7 @@ C5:  Raw line from source code.
 (0243)  CS-0x077  0x28B01         || 		ADD	   r11, 0x01
 (0244)  CS-0x078  0x04751         || 		MOV    r7, r10
 (0245)  CS-0x079  0x04859         || 		MOV    r8, r11
-(0246)  CS-0x07A  0x366F8         || 		MOV    r6, M_YELLOW
+(0246)  CS-0x07A  0x366E0         || 		MOV    r6, M_YELLOW
 (0247)  CS-0x07B  0x08189         || 		CALL   draw_dot
 (0248)                            || 
 (0249)  CS-0x07C  0x082E8         || 		BRN move_right_end
@@ -282,7 +282,7 @@ C5:  Raw line from source code.
 (0266)  CS-0x085  0x2CB01         || 		SUB	   r11, 0x01
 (0267)  CS-0x086  0x04751         || 		MOV    r7, r10
 (0268)  CS-0x087  0x04859         || 		MOV    r8, r11
-(0269)  CS-0x088  0x366F8         || 		MOV    r6, M_YELLOW
+(0269)  CS-0x088  0x366E0         || 		MOV    r6, M_YELLOW
 (0270)  CS-0x089  0x08189         || 		CALL   draw_dot
 (0271)                            || 
 (0272)  CS-0x08A  0x082F8         || 		BRN move_left_end
@@ -305,7 +305,7 @@ C5:  Raw line from source code.
 (0289)  CS-0x093  0x2CA01         || 		SUB	   r10, 0x01
 (0290)  CS-0x094  0x04751         || 		MOV    r7, r10
 (0291)  CS-0x095  0x04859         || 		MOV    r8, r11
-(0292)  CS-0x096  0x366F8         || 		MOV    r6, M_YELLOW
+(0292)  CS-0x096  0x366E0         || 		MOV    r6, M_YELLOW
 (0293)  CS-0x097  0x08189         || 		CALL   draw_dot
 (0294)                            || 
 (0295)  CS-0x098  0x08308         || 		BRN move_up_end
@@ -328,7 +328,7 @@ C5:  Raw line from source code.
 (0312)  CS-0x0A1  0x28A01         || 		ADD	   r10, 0x01
 (0313)  CS-0x0A2  0x04751         || 		MOV    r7, r10
 (0314)  CS-0x0A3  0x04859         || 		MOV    r8, r11
-(0315)  CS-0x0A4  0x366F8         ||         MOV    r6, M_YELLOW
+(0315)  CS-0x0A4  0x366E0         ||         MOV    r6, M_YELLOW
 (0316)  CS-0x0A5  0x08189         || 		CALL   draw_dot
 (0317)                            || 
 (0318)  CS-0x0A6  0x08318         || 		BRN move_down_end
@@ -1147,7 +1147,7 @@ M_BLUE         0x003   (0015)  ||
 M_BROWN        0x090   (0017)  ||  
 M_GREEN        0x01C   (0018)  ||  0330 0987 
 M_RED          0x0E0   (0014)  ||  
-M_YELLOW       0x0F8   (0013)  ||  0186 0246 0269 0292 0315 
+M_YELLOW       0x0E0   (0013)  ||  0186 0246 0269 0292 0315 
 SSEG           0x081   (0008)  ||  
 VGA_COLOR      0x092   (0006)  ||  0149 
 VGA_HADD       0x090   (0004)  ||  0148 0173 
