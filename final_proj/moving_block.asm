@@ -209,7 +209,7 @@ xdd_add80:  OR    r20,0x80      ; set bit if needed
 ;- 
 ;- This subroutine draws a dot on the display at the beginning of the program: 
 ;- 
-;- Tweaked registers: r4, r5 (draw_dot), r10, r11 (block location)
+;- Tweaked registers: r4, r5 (draw_dot), r10, r11 (block location), r7, r8
 ;---------------------------------------------------------------------
 draw_block: MOV r6,M_YELLOW
 
@@ -224,8 +224,8 @@ draw_block: MOV r6,M_YELLOW
 ;---------------------------------------------------------------------
 ;- Subrountine: move_block
 ;- 
-;- This subroutine completes the entirity of the block moving on the screen one step in any direction
-;- based on the button inputs 
+;- This subroutine completes the entirity of the block moving on the
+;- screen one step in any direction based on the button inputs 
 ;- 
 ;- Tweaked registers: r15 (button), r16, r17, r18 (delays)
 ;---------------------------------------------------------------------
@@ -242,7 +242,7 @@ move_block: IN r15,button			;first 4 lsb bits are port mapped to the buttons
 
 
 
-			;delay for a little less than a second
+			;delay for a little less than half a second
 			;time delayed for was estimated
 			MOV r16, 0xFF
 			outside_for0: SUB r16, 0x01
@@ -261,12 +261,13 @@ move_block: IN r15,button			;first 4 lsb bits are port mapped to the buttons
 			RET
 
 ;---------------------------------------------------------------------
-;- Subrountine: move_block
+;- Subrountine: move_right
 ;- 
-;- This subroutine completes the entirity of the block moving on the screen one step in any direction
-;- based on the button inputs 
+;- This subroutine checks to see if the block can move right, if it can, it moves right and erases previous location
 ;- 
-;- Tweaked registers: r15 (button), r16, r17, r18 (delays)
+;- Tweaked registers: r10, r11 (block loc), r6, r7, r8
+
+;- other three moving subroutines work in the same way as this one
 ;---------------------------------------------------------------------
 move_right:
 		
@@ -277,8 +278,6 @@ move_right:
 		CALL	read_dot	;r6 now has the color of the dot right of the block
 		CMP	   	r6, M_BLACK
 		BREQ 	RET			;if the dot right of the block is black, don't move block anywhere
-		
-		OUT		r6, LEDS
 
 		CALL	draw_at_prev_loc 	;draw white over where dot is
 
@@ -287,18 +286,9 @@ move_right:
 		MOV    r7, r10
 		MOV    r8, r11
 		MOV    r6, M_YELLOW
-		CALL   draw_dot				;draw
+		CALL   draw_dot				;draw at next location
 
 		RET
-
-;---------------------------------------------------------------------
-;- Subrountine: move_block
-;- 
-;- This subroutine completes the entirity of the block moving on the screen one step in any direction
-;- based on the button inputs 
-;- 
-;- Tweaked registers: r15 (button), r16, r17, r18 (delays)
-;---------------------------------------------------------------------
 
 move_left:
 		
@@ -309,8 +299,6 @@ move_left:
 		CALL	read_dot
 		CMP	   	r6, M_BLACK
 		BREQ	RET
-
-		OUT		r6, LEDS
 		
 		CALL	draw_at_prev_loc
 
@@ -332,8 +320,6 @@ move_up:
 		CALL	read_dot
 		CMP	   	r6, M_BLACK
 		BREQ	RET
-		
-		OUT		r6, LEDS
 
 		CALL	draw_at_prev_loc
 
@@ -355,8 +341,6 @@ move_down:
 		CALL	read_dot
 		CMP	   	r6, M_BLACK
 		BREQ	RET
-
-		OUT		r6, LEDS
 		
 		CALL	draw_at_prev_loc
 
@@ -369,6 +353,13 @@ move_down:
 
 		RET
 
+;---------------------------------------------------------------------
+;- Subrountine: draw_at_prev_loc
+;- 
+;- Simply draws a block at the block's current location
+;- 
+;- Tweaked registers: r6, r7, r8
+;---------------------------------------------------------------------
 draw_at_prev_loc:
 		MOV    r7, r10
 		MOV    r8, r11
@@ -376,6 +367,14 @@ draw_at_prev_loc:
 		CALL   draw_dot
 		RET
 
+;---------------------------------------------------------------------
+;- Subrountine: draw_maze
+;- 
+;- draws the maze background using a combination of draw_dot, draw_horizontal_line,
+;- and draw_vertical_line, also draws endpoint dot in green
+;- 
+;- Tweaked registers: r6, r7, r8
+;---------------------------------------------------------------------
 draw_maze: 
 
 		;endpoint
@@ -384,7 +383,6 @@ draw_maze:
 		MOV r8,0x25  ; x coordinate
 		MOV r7,0x1B	 ; y coordinate
 		CALL draw_dot
-
 
 		MOV r6,M_BLACK
 
@@ -1034,6 +1032,14 @@ draw_maze:
 
 		RET
 
+;---------------------------------------------------------------------
+;- Subrountine: draw_maze
+;- 
+;- draws the winning background screen using a combination of draw_dot, draw_horizontal_line,
+;- and draw_vertical_line in green
+;- 
+;- Tweaked registers: r6, r7, r8
+;---------------------------------------------------------------------
 draw_win:
 
 		MOV r6,M_GREEN
