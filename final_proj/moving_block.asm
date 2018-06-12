@@ -8,13 +8,10 @@
 .EQU SSEG = 0x81
 .EQU LEDS = 0x40
 
-.EQU BG_COLOR       = 0xFF             ; Background:  white
-
+.EQU BG_COLOR       = 0xFF ; Background:  white
 .EQU M_YELLOW		= 0xE0 ;0xF8
 .EQU M_RED			= 0xE0
-.EQU M_BLUE			= 0x03
 .EQU M_BLACK		= 0x00
-.EQU M_BROWN		= 0x90
 .EQU M_GREEN		= 0x1C
 
 .EQU button         = 0x9A
@@ -23,24 +20,41 @@
 ;r6 is used for color
 ;r7 is used for Y
 ;r8 is used for X
+;r9 is used for ending coordinate
+;r10 is used for block's y coordinate
+;r11 is used for block's x coordinate
+;r15 is used for button inputs
+
 ;---------------------------------------------------------------------
-;init:
-        CALL   draw_background         ; draw using default color
-		CALL	draw_maze
+
+;---------------------------------------------------------------------
+;- Main routine
+;- 
+;- Runs main program:
+;- 		initializes background display and dot
+;- 		takes in input from button to move dot
+;-		continuously checks if block is at endpoint
+;- 		draws win screen when player wins
+;---------------------------------------------------------------------
+init:
+        CALL   draw_background		;draws everything white
+		CALL	draw_maze			;draws maze on background
 		
-		CALL	draw_block
+		CALL	draw_block			;initializes placement of block at beginning
 
-main:   CALL	move_block
+main:   CALL	move_block			;moves based on button inputs
 
+		;checks to see when block reaches endpoint
 		CMP		r11, 0x25
 		BRNE	main
 		CMP		r10, 0x1b
 		BRNE	main
-		CALL	draw_background
 
-	win_screen:
-		CALL	draw_win
-		BRN		win_screen
+		CALL	draw_background		;erases maze drawing
+
+win_screen:
+		CALL	draw_win			;drawing win screen message
+		BRN		win_screen			;reset to restart game
 
 ;--------------------------------------------------------------------
 
@@ -138,7 +152,7 @@ draw_dot:
 
            AND   r5,0x3F       ; make sure top 2 bits cleared
            AND   r4,0x1F       ; make sure top 3 bits cleared
-           LSR   r4             ; need to get the bot 2 bits of r4 into sA
+           LSR   r4            ; need to get the bot 2 bits of r4 into sA
            BRCS  dd_add40
 
 t1:        LSR   r4
@@ -150,39 +164,53 @@ dd_out:    OUT   r5,VGA_LADD   ; write bot 8 address bits to register
            RET
 
 dd_add40:  OR    r5,0x40       ; set bit if needed
-           CLC                  ; freshen bit
+           CLC                 ; freshen bit
            BRN   t1             
 
 dd_add80:  OR    r5,0x80       ; set bit if needed
            BRN   dd_out
 ; --------------------------------------------------------------------
 
+;---------------------------------------------------------------------
+;- Subrountine: read_dot
+;- 
+;- This subroutine reads the color of a dot on the display the given coordinates: 
+;- 
+;- (X,Y) = (r8,r7)  and stores the color into r6
+;---------------------------------------------------------------------
 read_dot: 
            MOV   r19,r7         ; copy Y coordinate
            MOV   r20,r8         ; copy X coordinate
 
            AND   r20,0x3F       ; make sure top 2 bits cleared
            AND   r19,0x1F       ; make sure top 3 bits cleared
-           LSR   r19             ; need to get the bot 2 bits of r4 into sA
+           LSR   r19            ; need to get the bot 2 bits of r4 into sA
            BRCS  xdd_add40
 
-xt1:        LSR   r19
+xt1:       LSR   r19
            BRCS  xdd_add80
 
 xdd_out:   OUT   r20,VGA_LADD   ; write bot 8 address bits to register
            OUT   r19,VGA_HADD   ; write top 3 address bits to register
-           IN	 r6,VGA_READ  ; write data to frame buffer
+           IN	 r6,VGA_READ  	; takes in data
            RET
 
-xdd_add40:  OR    r20,0x40       ; set bit if needed
+xdd_add40: OR    r20,0x40       ; set bit if needed
            CLC                  ; freshen bit
            BRN   xt1             
 
-xdd_add80:  OR    r20,0x80       ; set bit if needed
+xdd_add80:  OR    r20,0x80      ; set bit if needed
            BRN   xdd_out
 
 ; --------------------------------------------------------------------
 
+;---------------------------------------------------------------------
+;- Subrountine: draw_block
+;- 
+;- This subroutine draws a dot on the display at the beginning of the program: 
+;- 
+;- Tweaked registers: r4, r5 (draw_dot), r10, r11 (block location)
+;---------------------------------------------------------------------
 draw_block: MOV r6,M_YELLOW
 
 			MOV r10,0x01
@@ -191,62 +219,86 @@ draw_block: MOV r6,M_YELLOW
 			MOV r8, r11
 			CALL draw_dot
 			RET
+; --------------------------------------------------------------------
 
-move_block: IN r15,button
+;---------------------------------------------------------------------
+;- Subrountine: move_block
+;- 
+;- This subroutine completes the entirity of the block moving on the screen one step in any direction
+;- based on the button inputs 
+;- 
+;- Tweaked registers: r15 (button), r16, r17, r18 (delays)
+;---------------------------------------------------------------------
+move_block: IN r15,button			;first 4 lsb bits are port mapped to the buttons
 
+			LSR r15					;lsr will shift lsb into carry
+			BRCS 	CALL move_right	;if carry is set (bit 0 is 1), move block right
 			LSR r15
-			BRCS move_right
-			move_right_end:
+			BRCS 	CALL move_left	;if carry is set (bit 1 is 1), move block left
 			LSR r15
-			BRCS move_left
-			move_left_end:
+			BRCS 	CALL move_up	;if carry is set (bit 2 is 1), move block up
 			LSR r15
-			BRCS move_up
-			move_up_end:
-			LSR r15
-			BRCS move_down
-			move_down_end:
+			BRCS 	CALL move_down	;if carry is set (bit 3 is 1), move block down
 
+
+
+			;delay for a little less than a second
+			;time delayed for was estimated
 			MOV r16, 0xFF
 			outside_for0: SUB r16, 0x01
-						  
 						  MOV r17, 0xFF
 			middle_for0:  SUB r17, 0x01
 					
 						  MOV r18, 0x0F
 			inside_for0:  SUB r18, 0x01
 						  BRNE inside_for0
-			
 			OR R17, 0x00
 			BRNE middle_for0
-
 			OR R16, 0x00
 			BRNE outside_for0
 
+
 			RET
 
+;---------------------------------------------------------------------
+;- Subrountine: move_block
+;- 
+;- This subroutine completes the entirity of the block moving on the screen one step in any direction
+;- based on the button inputs 
+;- 
+;- Tweaked registers: r15 (button), r16, r17, r18 (delays)
+;---------------------------------------------------------------------
 move_right:
 		
 		;maze boundary check
-		MOV		r8, r11
+		MOV		r8, r11		;set location to dot being checked
 		MOV		r7, r10
 		ADD		r8, 0x01
-		CALL	read_dot
+		CALL	read_dot	;r6 now has the color of the dot right of the block
 		CMP	   	r6, M_BLACK
-		BREQ	move_right_end
+		BREQ 	RET			;if the dot right of the block is black, don't move block anywhere
 		
 		OUT		r6, LEDS
 
-		CALL	draw_at_prev_loc
+		CALL	draw_at_prev_loc 	;draw white over where dot is
 
 		;draw pixel at new location
-		ADD	   r11, 0x01
+		ADD	   r11, 0x01			;move dot location one to the right
 		MOV    r7, r10
 		MOV    r8, r11
 		MOV    r6, M_YELLOW
-		CALL   draw_dot
+		CALL   draw_dot				;draw
 
-		BRN move_right_end
+		RET
+
+;---------------------------------------------------------------------
+;- Subrountine: move_block
+;- 
+;- This subroutine completes the entirity of the block moving on the screen one step in any direction
+;- based on the button inputs 
+;- 
+;- Tweaked registers: r15 (button), r16, r17, r18 (delays)
+;---------------------------------------------------------------------
 
 move_left:
 		
@@ -256,7 +308,7 @@ move_left:
 		SUB		r8, 0x01
 		CALL	read_dot
 		CMP	   	r6, M_BLACK
-		BREQ	move_left_end
+		BREQ	RET
 
 		OUT		r6, LEDS
 		
@@ -269,7 +321,7 @@ move_left:
 		MOV    r6, M_YELLOW
 		CALL   draw_dot
 
-		BRN move_left_end
+		RET
 
 move_up:
 		
@@ -279,7 +331,7 @@ move_up:
 		SUB		r7, 0x01
 		CALL	read_dot
 		CMP	   	r6, M_BLACK
-		BREQ	move_up_end
+		BREQ	RET
 		
 		OUT		r6, LEDS
 
@@ -292,7 +344,7 @@ move_up:
 		MOV    r6, M_YELLOW
 		CALL   draw_dot
 
-		BRN move_up_end
+		RET
 
 move_down:
 		
@@ -302,7 +354,7 @@ move_down:
 		ADD		r7, 0x01
 		CALL	read_dot
 		CMP	   	r6, M_BLACK
-		BREQ	move_down_end
+		BREQ	RET
 
 		OUT		r6, LEDS
 		
@@ -315,7 +367,7 @@ move_down:
         MOV    r6, M_YELLOW
 		CALL   draw_dot
 
-		BRN move_down_end
+		RET
 
 draw_at_prev_loc:
 		MOV    r7, r10
